@@ -157,6 +157,7 @@
     // 로그인 처리
     document.getElementById('login-form')?.addEventListener('submit', async (e) => {
       e.preventDefault();
+      alert('로그인 버튼 작동함');
       const email = document.getElementById('login-email').value;
       const password = document.getElementById('login-password').value;
       const errorEl = document.getElementById('login-error');
