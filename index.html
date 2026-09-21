@@ -136,11 +136,12 @@
     <a href="#" class="nav-item" onclick="switchTab('settings')">설정</a>
   </nav>
 
-  <script>
-    const SUPABASE_URL = 'https://wyniunfktsylkldicpda.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind5bml1bmZrdHN5bGtsZGljcGRhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDI0OTkwNDEsImV4cCI6MjA1ODA3NTA0MX0.m9bC-S9z824A8S_jV3R48gG3N3o8Z1vO4I4X433X-aY';
+    <script>
+    const SUPABASE_URL = 'https://wyniunfxftemkpbbwfbp.supabase.co/rest/v1/';
+    const SUPABASE_ANON_KEY = 'sb_publis...';
 
     const supabaseClient = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+
     let currentUserProfile = null;
 
     window.addEventListener('DOMContentLoaded', async () => {
