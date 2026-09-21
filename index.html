@@ -1,249 +1,123 @@
 <!doctype html>
 <html lang="ko">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#ffffff"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="apple-mobile-web-app-title" content="하랑줄넘기"><link rel="manifest" href="manifest.json"><link rel="apple-touch-icon" href="icons/icon-192.png">
-<title>하랑음악줄넘기 관리</title><style>
-html{background:#f6f7fa}body{-webkit-tap-highlight-color:transparent;overscroll-behavior:none}.app{padding-top:env(safe-area-inset-top)}nav{padding-bottom:env(safe-area-inset-bottom);height:calc(66px + env(safe-area-inset-bottom))}.screen{padding-bottom:calc(100px + env(safe-area-inset-bottom))}.top{padding-top:env(safe-area-inset-top);height:calc(72px + env(safe-area-inset-top))}
-*{box-sizing:border-box}body{margin:0;background:#f6f7fa;color:#20242a;font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR",sans-serif}.app{max-width:1180px;margin:auto;min-height:100vh}.top{height:72px;background:#fff;border-bottom:1px solid #e8eaf0;display:flex;align-items:center;justify-content:space-between;padding:0 26px;position:sticky;top:0;z-index:5}.top b{font-size:17px}.top small{display:block;color:#a0a5ae;font-size:8px;letter-spacing:.12em;margin-top:3px}.top button,.head button{background:#20242a;color:#fff;border:0;border-radius:10px;padding:10px 13px;font-weight:700}.screen{display:none;padding:30px 26px 100px}.screen.active{display:block}.hero,.head{display:flex;justify-content:space-between;align-items:flex-end;gap:15px;margin-bottom:18px}.hero small,.head small{font-size:10px;color:#8d939c;font-weight:700;letter-spacing:.05em}.hero h1,.head h1{font-size:27px;letter-spacing:-.05em;margin:6px 0}.hero p,.head p{margin:0;color:#9298a1;font-size:12px}.hero>span{border:1px solid #e3e5ea;background:#fff;padding:9px 12px;border-radius:10px;font-size:11px;color:#777e88}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.stats article{background:#fff;border:1px solid #e7e9ee;border-radius:15px;padding:17px}.stats small{display:block;color:#989ea7;font-size:10px}.stats strong{font-size:25px;margin-top:7px;display:inline-block}.stats em{font-style:normal;color:#9298a1;font-size:10px;margin-left:3px}.quick{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin:12px 0}.quick button{background:#fff;border:1px solid #e6e8ed;border-radius:13px;padding:14px 7px;font-size:18px;cursor:pointer}.quick span{display:block;font-size:10px;color:#717781;margin-top:6px}.card{background:#fff;border:1px solid #e7e9ee;border-radius:15px;padding:17px;margin-top:13px}.cardhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}.card h2{font-size:14px;margin:0 0 3px}.cardhead small{font-size:10px;color:#9ba0a8}.link{background:none;border:0;color:#727983;font-size:10px}.row{display:flex;align-items:center;gap:10px;padding:12px 2px;border-bottom:1px solid #f0f1f4}.row:last-child{border:0}.avatar{width:32px;height:32px;border-radius:10px;background:#f0f2f5;display:grid;place-items:center;font-size:11px;font-weight:800}.rowmain{flex:1}.rowmain b{font-size:11px}.rowmain small{display:block;color:#999fa8;font-size:9px;margin-top:3px}.badge{background:#f3f4f6;border-radius:7px;padding:5px 7px;font-size:9px;color:#6f7680}.best{font-size:11px;font-weight:800}.filters,.datebar{display:flex;gap:8px;margin-bottom:13px;flex-wrap:wrap}.filters input,.filters select,.datebar input,.datebar select,.settings input,label input,label select{border:1px solid #e0e3e8;border-radius:10px;background:#fff;padding:10px 12px;font-size:11px;outline:none}.filters input{flex:1;min-width:180px}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:11px}.student{background:#fff;border:1px solid #e7e9ee;border-radius:14px;padding:15px;cursor:pointer}.student h3{font-size:14px;margin:0}.studenttop{display:flex;justify-content:space-between;align-items:center;gap:8px}.deletebtn{border:0;background:#fff0f0;color:#d64545;border-radius:8px;padding:6px 8px;font-size:9px;font-weight:700;cursor:pointer}
-.editbtn{border:0;background:#f1f5ff;color:#3578e5;border-radius:8px;padding:6px 8px;font-size:9px;font-weight:700;cursor:pointer}
-.leavebtn{border:0;background:#fff7e8;color:#a66a00;border-radius:8px;padding:6px 8px;font-size:9px;font-weight:700;cursor:pointer}
-.student-actions{display:flex;gap:5px;flex-wrap:wrap;justify-content:flex-end}
-.status-active{background:#eef7ee;color:#287a35}.status-left{background:#f1f2f4;color:#888}.student p{font-size:9px;color:#989ea7;margin:5px 0 12px}.minis{display:grid;grid-template-columns:1fr 1fr;gap:6px}.mini{background:#f7f8fa;border-radius:8px;padding:8px}.mini span{font-size:8px;color:#9298a1}.mini b{display:block;font-size:11px;margin-top:2px}.checkrow{display:flex;align-items:center;gap:10px;padding:12px 2px;border-bottom:1px solid #f0f1f4}.checkrow input{width:19px;height:19px}.checkrow .push{margin-left:auto;font-size:9px;color:#999}.record{display:grid;grid-template-columns:1fr 105px;gap:12px;align-items:center;padding:10px 2px;border-bottom:1px solid #f0f1f4}.record b{font-size:11px}.record small{display:block;color:#999;font-size:9px;margin-top:3px}.record input{width:100%;border:1px solid #dfe2e7;border-radius:9px;padding:9px}.skill-info{display:flex;justify-content:space-between;padding:11px;background:#f7f8fa;border-radius:10px;font-size:10px;margin-bottom:10px}.skill-info span{color:#9298a1}.skill{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;padding:13px 2px;border-bottom:1px solid #f0f1f4}.skill b{font-size:11px}.dots{display:flex;gap:4px}.dot{width:22px;height:22px;border-radius:50%;background:#eceef1;display:grid;place-items:center;font-size:9px}.dot.on{background:#20242a;color:#fff}.progress{font-size:9px;color:#858b94}.growth{padding:5px}.growthtop{display:flex;justify-content:space-between;align-items:flex-end}.big{font-size:31px;font-weight:900}.big small{font-size:10px;color:#999}.bars{height:190px;display:flex;align-items:flex-end;gap:7px;border-bottom:1px solid #ddd;padding:10px 5px 25px;margin-top:15px}.bar{flex:1;background:#dfe2e7;border-radius:5px 5px 0 0;min-width:8px;position:relative}.bar.last{background:#20242a}.bar i{position:absolute;top:-15px;left:50%;transform:translateX(-50%);font-style:normal;font-size:8px}.bar span{position:absolute;bottom:-20px;left:50%;transform:translateX(-50%);font-size:8px;color:#999;white-space:nowrap}.reporthero{background:#20242a;color:#fff;border-radius:14px;padding:20px}.reporthero small{opacity:.65;font-size:9px}.reporthero h2{font-size:25px;margin:5px 0}.reportgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}.reportgrid div{background:#f7f8fa;color:#20242a;border-radius:10px;padding:12px}.reportgrid small{color:#999;font-size:8px}.reportgrid b{display:block;margin-top:4px}.settings label{display:flex;flex-direction:column;gap:7px;color:#777;font-size:10px;margin-bottom:14px}.settings hr{border:0;border-top:1px solid #eee;margin:18px 0}.backup{display:flex;gap:8px}.backup button,.filebtn,.settings>button{border:1px solid #e0e3e8;background:#fff;border-radius:9px;padding:10px 12px;font-size:10px;cursor:pointer}.filebtn input{display:none}.notice{margin-top:16px;background:#f7f8fa;padding:12px;border-radius:10px;font-size:9px;line-height:1.6;color:#777e88}nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(100%,1180px);height:66px;background:rgba(255,255,255,.96);border-top:1px solid #e7e9ee;display:flex;justify-content:space-around;align-items:center;z-index:10;backdrop-filter:blur(15px)}nav button{border:0;background:transparent;color:#9ba0a8;font-size:16px;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer}nav button span{font-size:8px}nav button.active{color:#20242a;font-weight:800}dialog{border:0;border-radius:16px;width:min(410px,92vw);padding:20px;box-shadow:0 20px 70px #0003}dialog::backdrop{background:#0004}.modalhead{display:flex;justify-content:space-between;align-items:center}.modalhead h2{font-size:17px}.x{border:0;background:#f0f1f3;border-radius:8px;width:29px;height:29px;font-size:19px}.modalactions{display:flex;justify-content:flex-end;gap:7px;margin-top:15px}.dark,.ghost{border:0;border-radius:9px;padding:10px 13px}.dark{background:#20242a;color:#fff}.ghost{background:#f1f2f4;color:#555}@media(max-width:720px){.top{padding:0 16px}.screen{padding:23px 15px 95px}.grid{grid-template-columns:1fr}.hero,.head{align-items:flex-start}.hero h1,.head h1{font-size:23px}.quick{gap:6px}.stats{gap:7px}.stats article{padding:13px}.stats strong{font-size:19px}.reportgrid{grid-template-columns:1fr 1fr}.reportgrid div:last-child{grid-column:span 2}}
-
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#ffffff">
+  <title>하랑음악줄넘기 관리</title>
+  <style>
+    html { background: #f6f7fa; }
+    body { margin: 0; background: #f6f7fa; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    .editbtn { border: 0; background: #f1f5ff; color: #357ded; padding: 6px 12px; border-radius: 6px; font-weight: bold; }
+    .leavebtn { border: 0; background: #fff7e8; color: #d97706; padding: 6px 12px; border-radius: 6px; font-weight: bold; }
+    .student-actions { display: flex; gap: 5px; flex-wrap: wrap; }
+    .status-active { background: #eef7ee; color: #287a28; padding: 3px 8px; border-radius: 4px; font-size: 12px; }
+    .status-inactive { background: #fef2f2; color: #991b1b; padding: 3px 8px; border-radius: 4px; font-size: 12px; }
+  </style>
+  
+  <!-- Supabase JS Client CDN -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 </head>
 <body>
-<div class="app">
-<header class="top"><div><b>↕ 하랑음악줄넘기</b><small>ACADEMY MANAGER</small></div><button id="addTop">+ 학생</button></header>
-<main>
-<section id="home" class="screen active">
-  <div class="hero"><div><small>오늘의 수업</small><h1>수업 준비, 한눈에.</h1><p>출석 · 기록 · 성장 · 기술심사를 한 곳에서 관리하세요.</p></div><span id="today"></span></div>
-  <div class="stats"><article><small>전체 학생</small><strong id="nStudents">0</strong><em>명</em></article><article><small>오늘 출석</small><strong id="nAttend">0</strong><em>명</em></article><article><small>오늘 최고기록</small><strong id="nPB">0</strong><em>건</em></article></div>
-  <div class="quick"><button data-go="attendance">✓<span>출석</span></button><button data-go="records">✎<span>기록 입력</span></button><button data-go="growth">↗<span>성장 보기</span></button><button data-go="skills">★<span>기술심사</span></button></div>
-  <div class="card"><div class="cardhead"><div><h2>오늘의 학생</h2><small>출석과 기록을 빠르게 확인</small></div><button class="link" data-go="students">전체 보기 →</button></div><div id="homeStudents"></div></div>
-  <div class="card"><div class="cardhead"><div><h2>최근 기록</h2><small>가장 최근에 입력된 줄넘기 기록</small></div></div><div id="recent"></div></div>
-</section>
+  <div class="app">
+    <header class="top" style="padding: 15px; background: white; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee;">
+      <div><b>하랑음악줄넘기</b> <small id="user-role-badge" style="background: #e0e7ff; color: #3730a3; padding: 2px 6px; border-radius: 4px; font-size: 11px;"></small></div>
+      <button onclick="handleLogout()" style="background: #f3f4f6; border: none; padding: 6px 12px; border-radius: 6px; font-size: 12px; cursor: pointer;">로그아웃</button>
+    </header>
 
-<section id="students" class="screen">
-  <div class="head"><div><small>STUDENTS</small><h1>학생 관리</h1></div><button id="addStudent">+ 학생 등록</button></div>
-  <div class="filters"><input id="search" placeholder="이름 검색"><select id="filterStatus"><option value="active">재원 학생</option><option value="left">퇴원 학생</option><option value="all">전체 학생</option></select><select id="filterClass"><option value="">전체 반</option><option>1반</option><option>2반</option><option>3반</option><option>선수부</option></select></div>
-  <div id="studentsGrid" class="grid"></div>
-</section>
+    <main style="padding: 15px;">
+      <section id="home" class="screen active">
+        <div class="hero" style="margin-bottom: 20px;">
+          <div><small>오늘의 수업</small><h2>하랑음악줄넘기 출석 및 기록 관리</h2></div>
+        </div>
+        <div class="stats" style="display: flex; gap: 10px; margin-bottom: 20px;">
+          <article style="background: white; padding: 15px; border-radius: 8px; flex: 1; text-align: center;">
+            <small>전체 학생</small>
+            <h3 id="total-students-count" style="margin: 5px 0 0 0;">-</h3>
+          </article>
+        </div>
+      </section>
+    </main>
+  </div>
 
-<section id="attendance" class="screen">
- <div class="head"><div><small>ATTENDANCE</small><h1>출석 관리</h1><p>오늘 수업에 참석한 학생을 체크하세요.</p></div><button id="saveAttend">출석 저장</button></div>
- <div class="datebar"><input type="date" id="attDate"><select id="attClass"><option value="">전체 반</option><option>1반</option><option>2반</option><option>3반</option><option>선수부</option></select></div>
- <div class="card"><div id="attendanceList"></div></div>
-</section>
+  <!-- Supabase 연동 및 로그인 스크립트 -->
+  <script>
+    const SUPABASE_URL = 'https://wyniunfktsylkldicpda.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_gC56vM3q5TzO0L9-K0jJ6w';
 
-<section id="records" class="screen">
- <div class="head"><div><small>RECORDS</small><h1>줄넘기 기록</h1><p>학생별 기록을 빠르게 입력하세요.</p></div><button id="saveRecords">전체 저장</button></div>
- <div class="datebar"><input type="date" id="recDate"><select id="recClass"><option value="">전체 반</option><option>1반</option><option>2반</option><option>3반</option><option>선수부</option></select><select id="recEvent"><option>번갈아뛰기</option><option>이중뛰기</option><option>크로스</option><option>프리스타일</option></select></div>
- <div class="card"><div id="recordList"></div></div>
-</section>
+    let supabaseClient = null;
 
-<section id="growth" class="screen">
- <div class="head"><div><small>GROWTH</small><h1>성장 관리</h1><p>개인 최고기록과 변화 추이를 확인하세요.</p></div></div>
- <div class="datebar"><select id="growthStudent"></select><select id="growthEvent"><option>번갈아뛰기</option><option>이중뛰기</option><option>크로스</option><option>프리스타일</option></select></div>
- <div class="card" id="growthBox"></div>
-</section>
+    document.addEventListener('DOMContentLoaded', async () => {
+      if (window.supabase) {
+        supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        await checkAuthSession();
+      }
+    });
 
-<section id="skills" class="screen">
- <div class="head"><div><small>SKILL MASTERS</small><h1>기술심사</h1><p>1~5단계와 배지·메달 진행 상황을 관리하세요.</p></div><button id="saveSkills">저장</button></div>
- <div class="card"><div class="skill-info"><b>배지 5개 → 메달</b><span>메달 5개 → 트로피</span></div><div id="skillList"></div></div>
-</section>
-
-<section id="reports" class="screen">
- <div class="head"><div><small>PARENT REPORT</small><h1>학부모 리포트</h1><p>학생 성장 내용을 한눈에 보여주는 화면입니다.</p></div><button id="printReport">인쇄 / PDF</button></div>
- <div class="datebar"><select id="reportStudent"></select></div>
- <div class="card" id="reportBox"></div>
-</section>
-
-<section id="settings" class="screen">
- <div class="head"><div><small>SETTINGS</small><h1>관리</h1><p>데이터 백업과 학원 정보를 관리합니다.</p></div></div>
- <div class="card settings">
-  <label>학원 이름<input id="academy"></label>
-  <button id="saveAcademy">저장</button>
-  <hr>
-  <div class="backup"><button id="exportData">데이터 백업</button><label class="filebtn">백업 불러오기<input type="file" id="importData" accept=".json"></label></div>
-  <div class="notice">이 프로그램은 별도 로그인이나 서버 연결 없이 이 기기 안에 데이터를 저장해서 사용할 수 있습니다. 데이터 백업을 주기적으로 저장해 주세요.<br><br><b>아이폰 앱처럼 사용하기</b><br>Safari에서 이 프로그램 주소를 연 뒤 <b>공유 → 홈 화면에 추가</b>를 누르면 앱 아이콘으로 설치됩니다. 설치 후에는 Safari 주소창 없이 앱처럼 실행되고, 인터넷이 끊겨도 기본 화면을 사용할 수 있습니다.</div>
- </div>
-</section>
-</main>
-<nav>
-<button class="active" data-go="home">⌂<span>홈</span></button><button data-go="students">👤<span>학생</span></button><button data-go="attendance">✓<span>출석</span></button><button data-go="records">✎<span>기록</span></button><button data-go="growth">↗<span>성장</span></button><button data-go="settings">⚙<span>관리</span></button>
-</nav>
-</div>
-
-<dialog id="studentModal"><form id="studentForm" method="dialog">
-<div class="modalhead"><h2 id="studentModalTitle">학생 등록</h2><button type="button" class="x" id="closeModal">×</button></div>
-<label>이름<input id="name" required placeholder="예: 김민준"></label>
-<label>반<select id="className"><option>1반</option><option>2반</option><option>3반</option><option>선수부</option></select></label>
-<label>학년<input id="grade" placeholder="예: 3학년"></label>
-<div class="modalactions"><button type="button" class="ghost" id="cancelModal">취소</button><button class="dark" id="studentSubmit">등록</button></div>
-</form></dialog>
-<script>
-const KEY="harang_v2";const EVENTS=["번갈아뛰기","이중뛰기","크로스","프리스타일"];
-const seed={academy:"하랑음악줄넘기",students:[{id:"s1",name:"이준호",className:"1반",grade:"3학년"},{id:"s2",name:"김현수",className:"2반",grade:"4학년"},{id:"s3",name:"김민준",className:"3반",grade:"2학년"},{id:"s4",name:"박서준",className:"선수부",grade:"5학년"}],records:[{id:"r1",sid:"s1",date:"2026-09-13",event:"번갈아뛰기",value:30},{id:"r2",sid:"s1",date:"2026-09-20",event:"번갈아뛰기",value:40},{id:"r3",sid:"s2",date:"2026-09-20",event:"번갈아뛰기",value:45},{id:"r4",sid:"s2",date:"2026-09-20",event:"이중뛰기",value:18}],attendance:{},skills:{}};
-let db=JSON.parse(localStorage.getItem(KEY)||"null")||seed;
-db.students=(db.students||[]).map(s=>({...s,status:s.status||"active",leftAt:s.leftAt||null}));
-db.records=db.records||[];db.attendance=db.attendance||{};db.skills=db.skills||{};
-const $=id=>document.getElementById(id), st=id=>db.students.find(x=>x.id===id);
-const activeStudents=()=>db.students.filter(s=>(s.status||"active")==="active");
-const esc=v=>String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
-const today=()=>new Date().toISOString().slice(0,10), fmt=d=>d?.slice(5).replace("-",".");
-function save(){localStorage.setItem(KEY,JSON.stringify(db));renderAll()}
-function best(id,e){return Math.max(0,...db.records.filter(r=>r.sid===id&&r.event===e).map(r=>+r.value||0))}
-function go(id){document.querySelectorAll(".screen").forEach(x=>x.classList.toggle("active",x.id===id));document.querySelectorAll("nav button").forEach(x=>x.classList.toggle("active",x.dataset.go===id));if(id==="attendance")renderAttendance();if(id==="records")renderRecords();if(id==="growth")renderGrowth();if(id==="skills")renderSkills();if(id==="reports")renderReport()}
-document.querySelectorAll("[data-go]").forEach(x=>x.onclick=()=>go(x.dataset.go));
-$("today").textContent=new Date().toLocaleDateString("ko-KR",{year:"numeric",month:"long",day:"numeric",weekday:"short"});
-$("attDate").value=$("recDate").value=today();
-
-function renderHome(){ 
- $("nStudents").textContent=activeStudents().length;
- $("nAttend").textContent=Object.values(db.attendance[today()]||{}).filter(Boolean).length;
- let p=0;activeStudents().forEach(s=>EVENTS.forEach(e=>{let rs=db.records.filter(r=>r.sid===s.id&&r.event===e&&r.date===today());if(rs.length&&+rs[rs.length-1].value>=best(s.id,e))p++}));
- $("nPB").textContent=p;
- $("homeStudents").innerHTML=activeStudents().slice(0,8).map(s=>`<div class="row" onclick="openReport('${s.id}')"><div class="avatar">${esc(s.name[0])}</div><div class="rowmain"><b>${esc(s.name)}</b><small>${esc(s.className)} · ${esc(s.grade)}</small></div><span class="badge">${Object.keys(db.attendance[today()]||{}).includes(s.id)?"출석":"미체크"}</span><span class="best">${best(s.id,"번갈아뛰기")||"-"}회</span></div>`).join("");
- $("recent").innerHTML=[...db.records].sort((a,b)=>b.date.localeCompare(a.date)).slice(0,8).map(r=>`<div class="row"><div class="rowmain"><b>${esc(st(r.sid)?.name||"퇴원 학생")}</b><small>${esc(r.event)} · ${r.date}</small></div><span class="best">${r.value}회</span></div>`).join("")
-}
-function renderStudents(){
- let q=$("search").value||"",c=$("filterClass").value,status=$("filterStatus").value;
- let arr=db.students.filter(s=>(!q||s.name.includes(q))&&(!c||s.className===c)&&(status==="all"||((s.status||"active")===status)));
- $("studentsGrid").innerHTML=arr.length?arr.map(s=>{
-   let left=(s.status||"active")==="left";
-   return `<div class="student" onclick="openReport('${s.id}')">
-   <div class="studenttop"><h3>${esc(s.name)}</h3><div class="student-actions">
-   ${left?`<button class="editbtn" onclick="event.stopPropagation();reactivateStudent('${s.id}')">재등록</button>`:`<button class="leavebtn" onclick="event.stopPropagation();leaveStudent('${s.id}')">퇴원</button>`}
-   <button class="editbtn" onclick="event.stopPropagation();editStudent('${s.id}')">수정</button>
-   <button class="deletebtn" onclick="event.stopPropagation();deleteStudent('${s.id}')">삭제</button>
-   </div></div>
-   <p>${esc(s.className)} · ${esc(s.grade)} <span class="badge ${left?"status-left":"status-active"}">${left?"퇴원":"재원"}</span></p>
-   <div class="minis">${EVENTS.slice(0,2).map(e=>`<div class="mini"><span>${e}</span><b>${best(s.id,e)||"-"}${best(s.id,e)?"회":""}</b></div>`).join("")}</div></div>`
- }).join(""):`<div class="notice">조건에 맞는 학생이 없습니다.</div>`
-}
-function renderAttendance(){let d=$("attDate").value||today(),c=$("attClass").value;let a=db.attendance[d]||{};$("attendanceList").innerHTML=activeStudents().filter(s=>!c||s.className===c).map(s=>`<label class="checkrow"><input type="checkbox" data-sid="${s.id}" ${a[s.id]?"checked":""}><b>${s.name}</b><span class="push">${s.className} · ${s.grade}</span></label>`).join("")}
-function renderRecords(){let d=$("recDate").value||today(),c=$("recClass").value,e=$("recEvent").value;let arr=activeStudents().filter(s=>!c||s.className===c);$("recordList").innerHTML=arr.map(s=>{let r=db.records.find(x=>x.sid===s.id&&x.date===d&&x.event===e);return `<div class="record"><div><b>${s.name}</b><small>${s.className} · 최고 ${best(s.id,e)||"-"}회</small></div><input type="number" min="0" data-sid="${s.id}" value="${r?.value??""}" placeholder="기록"></div>`}).join("")}
-function renderGrowth(){let sel=$("growthStudent");sel.innerHTML=activeStudents().map(s=>`<option value="${s.id}">${s.name} · ${s.className}</option>`).join("");drawGrowth()}
-function drawGrowth(){let id=$("growthStudent").value||db.students[0]?.id,e=$("growthEvent").value,rs=db.records.filter(r=>r.sid===id&&r.event===e).sort((a,b)=>a.date.localeCompare(b.date)).slice(-12),mx=Math.max(1,...rs.map(r=>+r.value));$("growthBox").innerHTML=rs.length?`<div class="growth"><div class="growthtop"><div><small>${st(id)?.name} · ${e}</small><div class="big">${best(id,e)}<small>회 · 개인 최고</small></div></div><span class="badge">${rs.length}회 측정</span></div><div class="bars">${rs.map((r,i)=>`<div class="bar ${i===rs.length-1?"last":""}" style="height:${Math.max(8,+r.value/mx*145)}px"><i>${r.value}</i><span>${fmt(r.date)}</span></div>`).join("")}</div></div>`:`<div class="notice">아직 기록이 없습니다.</div>`}
-function renderSkills(){ $("skillList").innerHTML=activeStudents().map(s=>{let n=db.skills[s.id]||0;return `<div class="skill"><div><b>${s.name}</b><div class="progress">${n} / 5 단계 완료</div></div><div class="dots">${[1,2,3,4,5].map(i=>`<button class="dot ${i<=n?"on":""}" data-sid="${s.id}" data-level="${i}">${i}</button>`).join("")}</div></div>`}).join("");document.querySelectorAll(".dot").forEach(b=>b.onclick=()=>{db.skills[b.dataset.sid]=+b.dataset.level;renderSkills()})}
-function reportHtml(id){let s=st(id);let top=EVENTS.map(e=>[e,best(id,e)]).sort((a,b)=>b[1]-a[1]);let badge=db.skills[id]||0;return `<div class="reporthero"><small>하랑음악줄넘기 성장 리포트</small><h2>${s.name}</h2><span>${s.className} · ${s.grade}</span><div class="reportgrid">${top.slice(0,3).map(x=>`<div><small>${x[0]}</small><b>${x[1]||"-"}회</b></div>`).join("")}</div></div><div class="card"><h2>기술심사</h2><p class="progress">현재 ${badge}/5 단계 · 배지 ${badge}개${badge>=5?" · 메달 교환 가능":""}</p></div>`}
-function renderReport(){let sel=$("reportStudent");sel.innerHTML=activeStudents().map(s=>`<option value="${s.id}">${s.name} · ${s.className}</option>`).join("");$("reportBox").innerHTML=reportHtml(sel.value||db.students[0]?.id)}
-function openReport(id){go("reports");$("reportStudent").value=id;renderReport();$("reportStudent").value=id;$("reportBox").innerHTML=reportHtml(id)}
-window.openReport=openReport;
-let editingStudentId=null;
-function openModal(id=null){
- editingStudentId=id;
- $("studentModalTitle").textContent=id?"학생 정보 수정":"학생 등록";
- $("studentSubmit").textContent=id?"저장":"등록";
- if(id){let s=st(id);$("name").value=s?.name||"";$("className").value=s?.className||"1반";$("grade").value=s?.grade||"";}
- else{$("studentForm").reset();$("className").value="1반";}
- $("studentModal").showModal();
-}
-function editStudent(id){openModal(id)}
-window.editStudent=editStudent;
-function leaveStudent(id){
- const s=st(id);if(!s)return;
- if(!confirm(`${s.name} 학생을 퇴원 처리할까요?\n\n학생의 출석·줄넘기 기록·기술심사 기록은 보존되고, 재원 학생 목록에서만 숨겨집니다.`))return;
- s.status="left";s.leftAt=today();save();go("students");
-}
-window.leaveStudent=leaveStudent;
-function reactivateStudent(id){
- const s=st(id);if(!s)return;
- if(!confirm(`${s.name} 학생을 재등록할까요?\n\n기존 출석·기록·기술심사 기록을 그대로 유지합니다.`))return;
- s.status="active";s.leftAt=null;save();go("students");
-}
-window.reactivateStudent=reactivateStudent;
-function deleteStudent(id){
- const s=st(id);if(!s)return;
- if(!confirm(`${s.name} 학생을 완전히 삭제할까요?\n\n학생 정보와 출석·줄넘기 기록·기술심사 기록이 이 기기에서 모두 삭제됩니다.\n퇴원 처리만 하면 기록을 보존할 수 있습니다.`))return;
- db.students=db.students.filter(x=>x.id!==id);
- db.records=db.records.filter(r=>r.sid!==id);
- db.skills=Object.fromEntries(Object.entries(db.skills||{}).filter(([sid])=>sid!==id));
- Object.keys(db.attendance||{}).forEach(d=>{if(db.attendance[d])delete db.attendance[d][id]});
- save();go("students");
-}
-window.deleteStudent=deleteStudent;
-$("addTop").onclick=()=>openModal();$("addStudent").onclick=()=>openModal();
-$("closeModal").onclick=$("cancelModal").onclick=()=>$("studentModal").close();
-$("studentForm").onsubmit=e=>{
- e.preventDefault();
- let name=$("name").value.trim(),className=$("className").value,grade=$("grade").value.trim()||"학년 미입력";
- if(editingStudentId){let s=st(editingStudentId);if(s){s.name=name;s.className=className;s.grade=grade;}}
- else db.students.push({id:"s"+Date.now(),name,className,grade,status:"active",leftAt:null});
- $("studentModal").close();save();go("students")
-};
-$("search").oninput=renderStudents;$("filterClass").onchange=renderStudents;$("filterStatus").onchange=renderStudents;
-$("attDate").onchange=$("attClass").onchange=renderAttendance;
-$("saveAttend").onclick=()=>{let d=$("attDate").value,a={};document.querySelectorAll("#attendanceList input").forEach(x=>{if(x.checked)a[x.dataset.sid]=true});db.attendance[d]=a;save();alert("출석을 저장했습니다.")};
-$("recDate").onchange=$("recClass").onchange=$("recEvent").onchange=renderRecords;
-$("saveRecords").onclick=()=>{let d=$("recDate").value,e=$("recEvent").value;document.querySelectorAll("#recordList input").forEach(x=>{if(x.value==="")return;let old=db.records.find(r=>r.sid===x.dataset.sid&&r.date===d&&r.event===e);if(old)old.value=+x.value;else db.records.push({id:"r"+Date.now()+Math.random(),sid:x.dataset.sid,date:d,event:e,value:+x.value})});save();alert("기록을 저장했습니다.")};
-$("growthStudent").onchange=drawGrowth;$("growthEvent").onchange=drawGrowth;
-$("reportStudent").onchange=()=>{$("reportBox").innerHTML=reportHtml($("reportStudent").value)};$("printReport").onclick=()=>window.print();
-$("saveSkills").onclick=()=>{save();alert("기술심사 진행 상황을 저장했습니다.")};
-$("academy").value=db.academy;$("saveAcademy").onclick=()=>{db.academy=$("academy").value.trim()||"하랑음악줄넘기";save();alert("저장했습니다.")};
-$("exportData").onclick=()=>{let blob=new Blob([JSON.stringify(db,null,2)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="harang-backup-"+today()+".json";a.click();URL.revokeObjectURL(a.href)};
-$("importData").onchange=e=>{let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{db=JSON.parse(r.result);save();alert("백업을 불러왔습니다.")}catch{alert("올바른 백업 파일이 아닙니다.")}};r.readAsText(f)};
-function renderAll(){renderHome();renderStudents();renderAttendance();renderRecords();renderGrowth();renderSkills();renderReport();$("academy").value=db.academy}renderAll();
-if("serviceWorker"in navigator){
- navigator.serviceWorker.register("sw.js").then(reg=>{
-   reg.update();
-   if(reg.waiting)reg.waiting.postMessage({type:"SKIP_WAITING"});
-   reg.addEventListener("updatefound",()=>{const nw=reg.installing;if(!nw)return;nw.addEventListener("statechange",()=>{if(nw.state==="installed"&&navigator.serviceWorker.controller){nw.postMessage({type:"SKIP_WAITING"});}})});
- }).catch(()=>{});
- navigator.serviceWorker.addEventListener("controllerchange",()=>{if(!window.__swReloaded){window.__swReloaded=true;location.reload();}});
-}
-document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible"&&navigator.serviceWorker.controller){navigator.serviceWorker.getRegistration().then(r=>r?.update())}});
-
-</script>
-  <!-- Supabase 로그인 시스템 -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-
-  const SUPABASE_URL = 'https://wyniunf...⁠';
-  const SUPABASE_ANON_KEY = 'sb_publis...';
-  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-  document.addEventListener('DOMContentLoaded', async () => {
-    // 접속 시 로그인 세션 체크
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) {
-      document.getElementById('login-modal').style.display = 'flex';
-    }
-  });
-
-  async function handleLogin() {
-    const email = document.getElementById('login-email').value;
-    const password = document.getElementById('login-password').value;
-    
-    if (!email || !password) {
-      alert('이메일과 비밀번호를 모두 입력해주세요.');
-      return;
+    async function checkAuthSession() {
+      const { data: { session } } = await supabaseClient.auth.getSession();
+      if (session) {
+        await verifyUserProfile(session.user);
+      } else {
+        document.getElementById('login-modal').style.display = 'flex';
+      }
     }
 
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-    
-    if (error) {
-      alert('로그인 실패: ' + error.message);
-    } else {
-      alert('로그인 성공!');
+    async function handleLogin() {
+      const email = document.getElementById('login-email').value;
+      const password = document.getElementById('login-password').value;
+
+      if (!email || !password) {
+        alert('이메일과 비밀번호를 모두 입력해주세요.');
+        return;
+      }
+
+      const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+
+      if (error) {
+        alert('로그인 실패: ' + error.message);
+      } else {
+        await verifyUserProfile(data.user);
+      }
+    }
+
+    async function verifyUserProfile(user) {
+      const { data: profile, error } = await supabaseClient
+        .from('profiles')
+        .select('*')
+        .eq('id', user.id)
+        .single();
+
+      if (error || !profile || !profile.is_active) {
+        alert('계정이 비활성화되었거나 권한이 없습니다.');
+        await supabaseClient.auth.signOut();
+        document.getElementById('login-modal').style.display = 'flex';
+        return;
+      }
+
+      // 프로필 확인 완료 후 로그인 창 닫기
       document.getElementById('login-modal').style.display = 'none';
+      
+      const roleBadge = document.getElementById('user-role-badge');
+      if (roleBadge) {
+        roleBadge.textContent = profile.role === 'owner' ? '관장' : '직원';
+      }
+    }
+
+    async function handleLogout() {
+      await supabaseClient.auth.signOut();
       location.reload();
     }
-  }
-</script>
+  </script>
 
-<!-- 로그인 모달 화면 -->
-<div id="login-modal" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: none; justify-content: center; align-items: center; z-index: 99999;">
-  <div style="background: white; padding: 25px; border-radius: 15px; width: 85%; max-width: 320px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.3);">
-    <h3 style="margin-top: 0; color: #333;">하랑음악줄넘기 로그인</h3>
-    <input type="email" id="login-email" placeholder="이메일" style="width: 100%; padding: 12px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; font-size: 14px;">
-    <input type="password" id="login-password" placeholder="비밀번호" style="width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; font-size: 14px;">
-    <button onclick="handleLogin()" style="width: 100%; padding: 12px; background: #007bff; color: white; border: none; border-radius: 8px; font-weight: bold; font-size: 15px; cursor: pointer;">로그인하기</button>
+  <!-- 로그인 모달 화면 -->
+  <div id="login-modal" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: none; justify-content: center; align-items: center; z-index: 9999;">
+    <div style="background: white; padding: 25px; border-radius: 12px; width: 85%; max-width: 320px; text-align: center;">
+      <h3 style="margin-top: 0; color: #333;">하랑음악줄넘기 로그인</h3>
+      <input type="email" id="login-email" placeholder="이메일 입력" style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box;">
+      <input type="password" id="login-password" placeholder="비밀번호 입력" style="width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box;">
+      <button onclick="handleLogin()" style="width: 100%; padding: 12px; background: #2563eb; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer;">로그인</button>
+    </div>
   </div>
-</div>
-
-</body></html>
+</body>
+</html>
