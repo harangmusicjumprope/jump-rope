@@ -191,7 +191,78 @@
       document.getElementById('login-modal').style.display = 'none';
       document.getElementById('profile-info').textContent = `${profile.name} (${profile.role === 'owner' ? '관장' : '직원'})님 환영합니다.`;
     }
+// ================================
+// 학생 등록
+// ================================
 
+document.getElementById('student-form')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const name = document.getElementById('student-name').value.trim();
+    const gender = document.getElementById('student-gender').value;
+
+    if (!name) {
+        alert('학생 이름을 입력해주세요.');
+        return;
+    }
+nst { error } = await supabaseClient
+    .from('students')
+    .insert({
+        name: name,
+        gender: gender
+    });
+
+if (error) {
+    console.error('학생 등록 오류:', error);
+    alert('학생 등록에 실패했습니다.\n' + error.message);
+    return;
+}
+
+alert(`${name} 학생이 등록되었습니다!`);
+
+document.getElementById('student-form').reset();
+
+await loadStudents();
+
+
+// 학생 목록 불러오기
+async function loadStudents() {
+    const list = document.getElementById('student-list');
+
+    if (!list) return;
+
+    const { data, error } = await supabaseClient
+        .from('students')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+    if (error) {
+        console.error('학생 목록 오류:', error);
+        list.textContent = '학생 목록을 불러오지 못했습니다.';
+        return;
+    }
+
+    if (!data || data.length === 0) {
+        list.textContent = '등록된 학생이 없습니다.';
+        return;
+    }
+
+    list.innerHTML = data.map(student => `
+        <div style="
+            padding:12px 5px;
+            border-bottom:1px solid #eee;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+        ">
+            <strong>${student.name}</strong>
+            <span style="color:#888;">
+                ${student.gender === 'M' ? '남자' : '여자'}
+            </span>
+        </div>
+    `).join('');
+}
+   
     function showLoginModal() {
       document.getElementById('login-modal').style.display = 'flex';
     }
@@ -217,3 +288,4 @@
   </script>
 </body>
 </html>
+co
