@@ -32,7 +32,7 @@
 
   <script>
     const SUPABASE_URL = 'https://wyniunfktsylkldicpda.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind5bml1bmZrdHN5bGtsZGljcGRhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDEzNTI1MjIsImV4cCI6MjA1NjkyODUyMn0.본인실제ANON키';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind5bml1bmZrdHN5bGtsZGljcGRhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDEzNTI1MjIsImV4cCI6MjA1NjkyODUyMn0.9-aPZ1S85sMAnmNsh-u0E8f74a0v9kZ';
 
     let sbClient = null;
 
@@ -44,18 +44,20 @@
     }
 
     document.addEventListener('DOMContentLoaded', async () => {
-      const client = getSupabase();
-      if (!client) {
-        document.getElementById('user-status').textContent = 'Supabase 로드 실패';
-        return;
-      }
+      setTimeout(async () => {
+        const client = getSupabase();
+        if (!client) {
+          document.getElementById('user-status').textContent = 'Supabase 연결 준비 중...';
+          return;
+        }
 
-      const { data: { session } } = await client.auth.getSession();
-      if (session) {
-        await verifyUser(session.user);
-      } else {
-        showLoginModal();
-      }
+        const { data: { session } } = await client.auth.getSession();
+        if (session) {
+          await verifyUser(session.user);
+        } else {
+          showLoginModal();
+        }
+      }, 300);
     });
 
     async function handleLogin() {
