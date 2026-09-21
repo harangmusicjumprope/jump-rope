@@ -50,7 +50,7 @@
     <h1>하랑음악줄넘기 관리자</h1>
   </header>
 
-  <!-- 로그인 레이어 (미인증 시 고정 표시) -->
+  <!-- 로그인 레이어 -->
   <div id="login-modal" class="login-overlay">
     <div class="login-card">
       <h2>하랑음악줄넘기 로그인</h2>
@@ -138,7 +138,7 @@
 
   <script>
     const SUPABASE_URL = 'https://wyniunfktsylkldicpda.supabase.co';
-    const SUPABASE_ANON_KEY = 'sb_publishable_gC56vM3q5TzO0L9-K0jJ6w';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind5bml1bmZrdHN5bGtsZGljcGRhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDI0OTkwNDEsImV4cCI6MjA1ODA3NTA0MX0.m9bC-S9z824A8S_jV3R48gG3N3o8Z1vO4I4X433X-aY';
 
     const supabaseClient = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
     let currentUserProfile = null;
