@@ -39,21 +39,22 @@
       </section>
     </main>
   </div>
+<!-- Supabase 연동 및 로그인 스크립트 -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  const SUPABASE_URL = 'https://wyniunfktsylkldicpda.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...복사한긴키...';
 
-  <!-- Supabase 연동 및 로그인 스크립트 -->
-  <script>
-    const SUPABASE_URL = 'https://wyniunfktsylkldicpda.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9';
+  let supabaseClient = null;
 
-    let supabaseClient = null;
+  document.addEventListener('DOMContentLoaded', async () => {
+    if (window.supabase) {
+      supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      await checkAuthSession();
+    }
+  });
 
-    document.addEventListener('DOMContentLoaded', async () => {
-      if (window.supabase) {
-        supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        await checkAuthSession();
-      }
-    });
-
+  
     async function checkAuthSession() {
       const { data: { session } } = await supabaseClient.auth.getSession();
       if (session) {
