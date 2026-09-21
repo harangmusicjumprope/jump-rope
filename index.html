@@ -1,86 +1,118 @@
-<!-- Supabase SDK 및 로그인 통합 스크립트 -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-  const SUPABASE_URL = 'https://wyniunfktsylkldicpda.supabase.co';
-  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind5bml1bmZrdHN5bGtsZGljcGRhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDEzNTI1MjIsImV4cCI6MjA1NjkyODUyMn0.본인실제ANON키';
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>하랑음악줄넘기</title>
+  
+  <!-- Supabase SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body style="margin:0; padding:0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #f5f5f7;">
 
-  // 스크립트 로드 후 클라이언트 생성
-  function getClient() {
-    if (window.supabaseClient) return window.supabaseClient;
-    if (window.supabase) {
-      window.supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-      return window.supabaseClient;
+  <!-- 메인 콘텐트 영역 -->
+  <div id="app-container" style="padding: 20px;">
+    <h2>하랑음악줄넘기 학원 관리</h2>
+    <p id="user-status">로그인 확인 중...</p>
+    <button id="btn-logout" onclick="handleLogout()" style="display:none; padding:10px 16px; background:#ff3b30; color:white; border:none; border-radius:8px; font-weight:bold;">로그아웃</button>
+  </div>
+
+  <!-- 로그인 모달 -->
+  <div id="login-modal" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: none; justify-content: center; align-items: center; z-index: 9999;">
+    <div style="background: white; padding: 25px; border-radius: 16px; width: 85%; max-width: 320px; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.15);">
+      <h3 style="margin-top: 0; margin-bottom: 20px; color: #1c1c1e;">하랑음악줄넘기 로그인</h3>
+      <div style="display: flex; flex-direction: column; gap: 12px;">
+        <input type="email" id="login-email" placeholder="이메일" style="padding: 12px; border: 1px solid #c7c7cc; border-radius: 8px; font-size: 15px; outline: none;">
+        <input type="password" id="login-password" placeholder="비밀번호" style="padding: 12px; border: 1px solid #c7c7cc; border-radius: 8px; font-size: 15px; outline: none;">
+        <button type="button" onclick="handleLogin()" style="padding: 12px; background: #007aff; color: white; border: none; border-radius: 8px; font-weight: bold; font-size: 16px; margin-top: 5px;">로그인</button>
+      </div>
+      <p id="login-error" style="color: #ff3b30; font-size: 13px; margin-top: 12px; margin-bottom: 0; display: none;"></p>
+    </div>
+  </div>
+
+  <script>
+    const SUPABASE_URL = 'https://wyniunfktsylkldicpda.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind5bml1bmZrdHN5bGtsZGljcGRhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDEzNTI1MjIsImV4cCI6MjA1NjkyODUyMn0.본인실제ANON키';
+
+    let sbClient = null;
+
+    function getSupabase() {
+      if (!sbClient && window.supabase) {
+        sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      }
+      return sbClient;
     }
-    return null;
-  }
 
-  // 페이지 로드 시 세션 확인
-  document.addEventListener('DOMContentLoaded', async () => {
-    setTimeout(async () => {
-      const client = getClient();
-      if (!client) return;
+    document.addEventListener('DOMContentLoaded', async () => {
+      const client = getSupabase();
+      if (!client) {
+        document.getElementById('user-status').textContent = 'Supabase 로드 실패';
+        return;
+      }
 
       const { data: { session } } = await client.auth.getSession();
       if (session) {
-        await verifyUserProfile(session.user);
+        await verifyUser(session.user);
       } else {
-        const modal = document.getElementById('login-modal');
-        if (modal) modal.style.display = 'flex';
+        showLoginModal();
       }
-    }, 500);
-  });
+    });
 
-  // 로그인 버튼 클릭 시 실행
-  async function handleLogin() {
-    const emailEl = document.getElementById('login-email');
-    const passEl = document.getElementById('login-password');
-    const errorEl = document.getElementById('login-error');
+    async function handleLogin() {
+      const email = document.getElementById('login-email').value;
+      const password = document.getElementById('login-password').value;
+      const errorEl = document.getElementById('login-error');
 
-    if (!emailEl || !passEl) return;
+      if (errorEl) errorEl.style.display = 'none';
 
-    const email = emailEl.value;
-    const password = passEl.value;
+      const client = getSupabase();
+      if (!client) return;
 
-    if (errorEl) errorEl.style.display = 'none';
+      const { data, error } = await client.auth.signInWithPassword({ email, password });
 
-    const client = getClient();
-    if (!client) {
-      alert('Supabase 연동 준비 중입니다. 잠시 후 다시 시도해 주세요.');
-      return;
-    }
-
-    const { data, error } = await client.auth.signInWithPassword({ email, password });
-
-    if (error) {
-      alert('로그인 실패: ' + error.message);
-      if (errorEl) {
-        errorEl.textContent = error.message;
-        errorEl.style.display = 'block';
+      if (error) {
+        if (errorEl) {
+          errorEl.textContent = '로그인 실패: ' + error.message;
+          errorEl.style.display = 'block';
+        }
+      } else {
+        await verifyUser(data.user);
       }
-    } else {
-      await verifyUserProfile(data.user);
-    }
-  }
-
-  // 프로필 권한 확인 및 메인 화면 진입
-  async function verifyUserProfile(user) {
-    const client = getClient();
-    const { data: profile, error } = await client
-      .from('profiles')
-      .select('*')
-      .eq('id', user.id)
-      .single();
-
-    if (error || !profile || !profile.is_active) {
-      alert('계정이 비활성화되었거나 권한 정보가 없습니다.');
-      await client.auth.signOut();
-      const modal = document.getElementById('login-modal');
-      if (modal) modal.style.display = 'flex';
-      return;
     }
 
-    // 로그인 성공 시 모달 닫기
-    const modal = document.getElementById('login-modal');
-    if (modal) modal.style.display = 'none';
-  }
-</script>
+    async function verifyUser(user) {
+      const client = getSupabase();
+      const { data: profile, error } = await client
+        .from('profiles')
+        .select('*')
+        .eq('id', user.id)
+        .single();
+
+      if (error || !profile || !profile.is_active) {
+        alert('계정이 비활성화되었거나 권한 정보가 없습니다.');
+        await client.auth.signOut();
+        showLoginModal();
+        return;
+      }
+
+      document.getElementById('login-modal').style.display = 'none';
+      document.getElementById('user-status').textContent = `${profile.name}님 환영합니다 (${profile.role === 'owner' ? '관장' : '직원'})`;
+      document.getElementById('btn-logout').style.display = 'inline-block';
+    }
+
+    function showLoginModal() {
+      document.getElementById('login-modal').style.display = 'flex';
+      document.getElementById('user-status').textContent = '로그인이 필요합니다.';
+      document.getElementById('btn-logout').style.display = 'none';
+    }
+
+    async function handleLogout() {
+      const client = getSupabase();
+      if (client) {
+        await client.auth.signOut();
+        showLoginModal();
+      }
+    }
+  </script>
+</body>
+</html>
