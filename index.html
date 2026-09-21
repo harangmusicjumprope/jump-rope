@@ -181,7 +181,7 @@
         .single();
 
       if (error || !profile || !profile.is_active) {
-        alert('계정이 비활성화되었거나 프로필 권한 정보가 없습니다.');
+alert(`프로필 확인 실패\nID: ${user.id}\n오류: ${error?.message || '프로필 없음'}\nprofile: ${JSON.stringify(profile)}`);
         await supabaseClient.auth.signOut();
         showLoginModal();
         return;
