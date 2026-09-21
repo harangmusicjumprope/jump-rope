@@ -31,6 +31,20 @@ nav{width:min(100%,760px);height:72px;background:rgba(255,255,255,.92);border-to
 dialog{border-radius:20px;padding:20px;box-shadow:0 24px 80px rgba(0,0,0,.2)}dialog::backdrop{background:rgba(0,0,0,.38)}.modalhead h2{font-size:16px}.x{border:0;background:#f0f2f4}
 @media(max-width:430px){.screen{padding-left:14px;padding-right:14px}.grid{grid-template-columns:1fr 1fr}.hero h1,.head h1{font-size:24px}.stats article{padding:13px 11px}.stats strong{font-size:21px}.top{padding-left:15px;padding-right:15px}nav button{min-width:43px}}
 @media(min-width:761px){body{padding:20px 0}.app{border-radius:24px;overflow:hidden;min-height:calc(100vh - 40px)}}
+
+.detailhero{background:#f7f8fa;border-radius:13px;padding:15px;margin-bottom:11px}
+.detailhero h3{margin:0;font-size:19px}.detailhero p{margin:5px 0 0;color:#8c929b;font-size:10px}
+.detailstats{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:10px 0}
+.detailstats div{background:#fff;border:1px solid #e7e9ee;border-radius:10px;padding:10px;text-align:center}
+.detailstats small{display:block;color:#999;font-size:8px}.detailstats b{display:block;font-size:15px;margin-top:3px}
+.detailsection{border-top:1px solid #eceef2;padding-top:12px;margin-top:12px}
+.detailsection h4{margin:0 0 8px;font-size:12px}
+.history{max-height:190px;overflow:auto}.history .row{padding:8px 2px}
+.medalbox{display:flex;gap:7px;flex-wrap:wrap}.medal{padding:7px 9px;border-radius:9px;background:#f1f2f5;font-size:9px}.medal.on{background:#20242a;color:#fff}
+.primary{background:#20242a!important;color:#fff!important}
+.danger{background:#fff!important;color:#d33!important;border:1px solid #f0caca!important}
+.note{font-size:9px;color:#999;line-height:1.5}
+@media(max-width:700px){.screen{padding:22px 16px 100px}.top{padding:0 16px}.grid{grid-template-columns:1fr 1fr}.detailstats{grid-template-columns:repeat(3,1fr)}}
 </style>
 </head>
 <body>
@@ -96,6 +110,12 @@ dialog{border-radius:20px;padding:20px;box-shadow:0 24px 80px rgba(0,0,0,.2)}dia
 </nav>
 </div>
 
+
+<dialog id="detailModal">
+  <div class="modalhead"><h2 id="detailTitle">학생 상세</h2><button type="button" class="x" id="detailClose">×</button></div>
+  <div id="detailBody"></div>
+</dialog>
+
 <dialog id="studentModal"><form id="studentForm" method="dialog"><div class="modalhead"><h2>학생 등록</h2><button type="button" class="x" id="closeModal">×</button></div>
 <label>이름<input id="name" required placeholder="예: 김민준"></label><label>반<select id="className"><option>1반</option><option>2반</option><option>3반</option><option>선수부</option></select></label><label>학년<input id="grade" placeholder="예: 3학년"></label><div class="modalactions"><button type="button" class="ghost" id="cancelModal">취소</button><button class="dark">등록</button></div></form></dialog>
 <script>
@@ -113,15 +133,28 @@ $("attDate").value=$("recDate").value=today();
 
 function renderHome(){ $("nStudents").textContent=db.students.length;$("nAttend").textContent=Object.values(db.attendance[today()]||{}).filter(Boolean).length;
 let p=0;db.students.forEach(s=>EVENTS.forEach(e=>{let rs=db.records.filter(r=>r.sid===s.id&&r.event===e&&r.date===today());if(rs.length&&+rs[rs.length-1].value>=best(s.id,e))p++}));$("nPB").textContent=p;
-$("homeStudents").innerHTML=db.students.slice(0,8).map(s=>`<div class="row" onclick="openReport('${s.id}')"><div class="avatar">${s.name[0]}</div><div class="rowmain"><b>${s.name}</b><small>${s.className} · ${s.grade}</small></div><span class="badge">${(db.attendance[today()]||{})[s.id]?"출석":"미체크"}</span><span class="best">${best(s.id,"번갈아뛰기")||"-"}회</span></div>`).join("");
+$("homeStudents").innerHTML=db.students.slice(0,8).map(s=>`<div class="row" onclick="openDetail('${s.id}')"><div class="avatar">${s.name[0]}</div><div class="rowmain"><b>${s.name}</b><small>${s.className} · ${s.grade}</small></div><span class="badge">${(db.attendance[today()]||{})[s.id]?"출석":"미체크"}</span><span class="best">${best(s.id,"번갈아뛰기")||"-"}회</span></div>`).join("");
 $("recent").innerHTML=[...db.records].sort((a,b)=>b.date.localeCompare(a.date)).slice(0,8).map(r=>`<div class="row"><div class="rowmain"><b>${st(r.sid)?.name}</b><small>${r.event} · ${r.date}</small></div><span class="best">${r.value}회</span></div>`).join("")}
-function renderStudents(){let q=$("search").value||"",c=$("filterClass").value;let arr=db.students.filter(s=>(!q||s.name.includes(q))&&(!c||s.className===c));$("studentsGrid").innerHTML=arr.map(s=>`<div class="student" onclick="openReport('${s.id}')"><h3>${s.name}</h3><p>${s.className} · ${s.grade}</p><div class="minis">${EVENTS.slice(0,2).map(e=>`<div class="mini"><span>${e}</span><b>${best(s.id,e)||"-"}${best(s.id,e)?"회":""}</b></div>`).join("")}</div></div>`).join("")}
+function renderStudents(){let q=$("search").value||"",c=$("filterClass").value;let arr=db.students.filter(s=>(!q||s.name.includes(q))&&(!c||s.className===c));$("studentsGrid").innerHTML=arr.map(s=>`<div class="student" onclick="openDetail('${s.id}')"><h3>${s.name}</h3><p>${s.className} · ${s.grade}</p><div class="minis">${EVENTS.slice(0,2).map(e=>`<div class="mini"><span>${e}</span><b>${best(s.id,e)||"-"}${best(s.id,e)?"회":""}</b></div>`).join("")}</div></div>`).join("")}
 function renderAttendance(){let d=$("attDate").value||today(),c=$("attClass").value;let a=db.attendance[d]||{};$("attendanceList").innerHTML=db.students.filter(s=>!c||s.className===c).map(s=>`<label class="checkrow"><input type="checkbox" data-sid="${s.id}" ${a[s.id]?"checked":""}><b>${s.name}</b><span class="push">${s.className} · ${s.grade}</span></label>`).join("")}
 function renderRecords(){let d=$("recDate").value||today(),c=$("recClass").value,e=$("recEvent").value;let arr=db.students.filter(s=>!c||s.className===c);$("recordList").innerHTML=arr.map(s=>{let r=db.records.find(x=>x.sid===s.id&&x.date===d&&x.event===e);return `<div class="record"><div><b>${s.name}</b><small>${s.className} · 최고 ${best(s.id,e)||"-"}회</small></div><input type="number" min="0" data-sid="${s.id}" value="${r?.value??""}" placeholder="기록"></div>`}).join("")}
 function renderGrowth(){let sel=$("growthStudent");sel.innerHTML=db.students.map(s=>`<option value="${s.id}">${s.name} · ${s.className}</option>`).join("");drawGrowth()}
 function drawGrowth(){let id=$("growthStudent").value||db.students[0]?.id,e=$("growthEvent").value,rs=db.records.filter(r=>r.sid===id&&r.event===e).sort((a,b)=>a.date.localeCompare(b.date)).slice(-12),mx=Math.max(1,...rs.map(r=>+r.value));$("growthBox").innerHTML=rs.length?`<div class="growth"><div class="growthtop"><div><small>${st(id)?.name} · ${e}</small><div class="big">${best(id,e)}<small>회 · 개인 최고</small></div></div><span class="badge">${rs.length}회 측정</span></div><div class="bars">${rs.map((r,i)=>`<div class="bar ${i===rs.length-1?"last":""}" style="height:${Math.max(8,+r.value/mx*145)}px"><i>${r.value}</i><span>${fmt(r.date)}</span></div>`).join("")}</div></div>`:`<div class="notice">아직 기록이 없습니다.</div>`}
-function renderSkills(){ $("skillList").innerHTML=db.students.map(s=>{let n=db.skills[s.id]||0;return `<div class="skill"><div><b>${s.name}</b><div class="progress">${n} / 5 단계 완료</div></div><div class="dots">${[1,2,3,4,5].map(i=>`<button class="dot ${i<=n?"on":""}" data-sid="${s.id}" data-level="${i}">${i}</button>`).join("")}</div></div>`}).join("");document.querySelectorAll(".dot").forEach(b=>b.onclick=()=>{db.skills[b.dataset.sid]=+b.dataset.level;renderSkills()})}
-function reportHtml(id){let s=st(id);let top=EVENTS.map(e=>[e,best(id,e)]).sort((a,b)=>b[1]-a[1]);let badge=db.skills[id]||0;return `<div class="reporthero"><small>하랑음악줄넘기 성장 리포트</small><h2>${s.name}</h2><span>${s.className} · ${s.grade}</span><div class="reportgrid">${top.slice(0,3).map(x=>`<div><small>${x[0]}</small><b>${x[1]||"-"}회</b></div>`).join("")}</div></div><div class="card"><h2>기술심사</h2><p class="progress">현재 ${badge}/5 단계 · 배지 ${badge}개${badge>=5?" · 메달 교환 가능":""}</p></div>`}
+function renderSkills(){
+  $("skillList").innerHTML=db.students.map(s=>{
+    let b=Math.min(5,+(db.badges[s.id]||0)), m=Math.min(5,+(db.medals[s.id]||0));
+    return `<div class="skill"><div><b>${s.name}</b><div class="progress">배지 ${b}/5 · 메달 ${m}/5 ${m>=5?'· 🏆 트로피':''}</div></div>
+      <div class="dots">${[1,2,3,4,5].map(i=>`<button class="dot ${i<=b?"on":""}" data-sid="${s.id}" data-level="${i}">${i}</button>`).join("")}</div></div>`;
+  }).join("");
+  document.querySelectorAll(".dot").forEach(b=>b.onclick=()=>{
+    const id=b.dataset.sid, n=+b.dataset.level;
+    db.badges[id]=n;
+    if(n===5 && !(db.medals[id]>0)) db.medals[id]=1;
+    localStorage.setItem(KEY,JSON.stringify(db));
+    renderSkills();
+  });
+}
+function reportHtml(id){let s=st(id);if(!s)return `<div class="notice">학생을 등록해주세요.</div>`;let top=EVENTS.map(e=>[e,best(id,e)]).sort((a,b)=>b[1]-a[1]);let badge=Math.min(5,+(db.badges[id]||0)),medal=Math.min(5,+(db.medals[id]||0)),att=attendanceStats(id);return `<div class="reporthero"><small>하랑음악줄넘기 성장 리포트</small><h2>${s.name}</h2><span>${s.className} · ${s.grade}</span><div class="reportgrid">${top.slice(0,3).map(x=>`<div><small>${x[0]}</small><b>${x[1]||"-"}회</b></div>`).join("")}</div></div><div class="card"><h2>출석 · 기술심사</h2><p class="progress">출석률 ${att.rate}% · 배지 ${badge}/5 · 메달 ${medal}/5 ${medal>=5?"· 🏆 트로피":""}</p><p class="note">배지 5개 → 메달 1개 · 메달 5개 → 트로피</p></div><div class="card"><h2>최근 기록</h2>${db.records.filter(r=>r.sid===id).sort((a,b)=>b.date.localeCompare(a.date)).slice(0,8).map(r=>`<div class="row"><div class="rowmain"><b>${r.event}</b><small>${r.date}</small></div><span class="best">${r.value}회</span></div>`).join("")||'<div class="note">아직 기록이 없습니다.</div>'}</div>`}
 function renderReport(){let sel=$("reportStudent");sel.innerHTML=db.students.map(s=>`<option value="${s.id}">${s.name} · ${s.className}</option>`).join("");$("reportBox").innerHTML=reportHtml(sel.value||db.students[0]?.id)}
 function openReport(id){go("reports");$("reportStudent").value=id;renderReport();$("reportStudent").value=id;$("reportBox").innerHTML=reportHtml(id)}
 window.openReport=openReport;
@@ -138,6 +171,59 @@ $("saveSkills").onclick=()=>{save();alert("기술심사 진행 상황을 저장�
 $("academy").value=db.academy;$("saveAcademy").onclick=()=>{db.academy=$("academy").value.trim()||"하랑음악줄넘기";save();alert("저장했습니다.")};
 $("exportData").onclick=()=>{let blob=new Blob([JSON.stringify(db,null,2)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="harang-backup-"+today()+".json";a.click();URL.revokeObjectURL(a.href)};
 $("importData").onchange=e=>{let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{db=JSON.parse(r.result);save();alert("백업을 불러왔습니다.")}catch{alert("올바른 백업 파일이 아닙니다.")}};r.readAsText(f)};
+
+function migrateV3(){
+  if(!db.badges) db.badges={};
+  if(!db.medals) db.medals={};
+  db.students.forEach(stu=>{
+    if(db.badges[stu.id]===undefined) db.badges[stu.id]=Math.min(5, +(db.skills?.[stu.id]||0));
+    if(db.medals[stu.id]===undefined) db.medals[stu.id]=0;
+  });
+}
+function attendanceStats(id){
+  const days=Object.keys(db.attendance||{});
+  const marked=days.filter(d=>db.attendance[d]?.[id]).length;
+  return {marked, total:days.length, rate:days.length?Math.round(marked/days.length*100):0};
+}
+function openDetail(id){
+  const s=st(id); if(!s)return;
+  const att=attendanceStats(id);
+  const rows=db.records.filter(r=>r.sid===id).sort((a,b)=>b.date.localeCompare(a.date)).slice(0,12);
+  const badges=Math.min(5,+(db.badges[id]||0));
+  const medals=Math.min(5,+(db.medals[id]||0));
+  const bestRows=EVENTS.map(e=>[e,best(id,e)]).filter(x=>x[1]>0);
+  $("detailTitle").textContent=s.name+" 학생 상세";
+  $("detailBody").innerHTML=`
+    <div class="detailhero"><h3>${s.name}</h3><p>${s.className} · ${s.grade}</p></div>
+    <div class="detailstats">
+      <div><small>출석</small><b>${att.rate}%</b></div>
+      <div><small>기록</small><b>${db.records.filter(r=>r.sid===id).length}회</b></div>
+      <div><small>배지</small><b>${badges}/5</b></div>
+    </div>
+    <div class="detailsection"><h4>개인 최고기록</h4>
+      ${bestRows.length?bestRows.map(x=>`<div class="row"><div class="rowmain"><b>${x[0]}</b></div><span class="best">${x[1]}회</span></div>`).join(""):'<div class="note">아직 기록이 없습니다.</div>'}
+    </div>
+    <div class="detailsection"><h4>하랑 스킬 마스터즈</h4>
+      <div class="medalbox">
+        ${[1,2,3,4,5].map(i=>`<span class="medal ${i<=badges?'on':''}">배지 ${i}</span>`).join("")}
+      </div>
+      <p class="note">배지 5개 → 메달 1개 · 메달 5개 → 트로피</p>
+      <div class="medalbox">
+        ${[1,2,3,4,5].map(i=>`<span class="medal ${i<=medals?'on':''}">메달 ${i}</span>`).join("")}
+      </div>
+    </div>
+    <div class="detailsection"><h4>최근 기록</h4>
+      <div class="history">${rows.length?rows.map(r=>`<div class="row"><div class="rowmain"><b>${r.event}</b><small>${r.date}</small></div><span class="best">${r.value}회</span></div>`).join(""):'<div class="note">최근 기록이 없습니다.</div>'}</div>
+    </div>
+    <div class="modalactions">
+      <button type="button" class="ghost" onclick="go('reports');document.querySelector('#reportStudent').value='${id}';renderReport();detailModal.close()">성장 리포트</button>
+      <button type="button" class="primary" onclick="detailModal.close()">닫기</button>
+    </div>`;
+  $("detailModal").showModal();
+}
+window.openDetail=openDetail;
+migrateV3();
+
 function renderAll(){renderHome();renderStudents();renderAttendance();renderRecords();renderGrowth();renderSkills();renderReport();$("academy").value=db.academy}renderAll();
 if("serviceWorker"in navigator)navigator.serviceWorker.register("sw.js");
 
