@@ -12,6 +12,8 @@ html{background:#f6f7fa}body{-webkit-tap-highlight-color:transparent;overscroll-
 .status-active{background:#eef7ee;color:#287a35}.status-left{background:#f1f2f4;color:#888}.student p{font-size:9px;color:#989ea7;margin:5px 0 12px}.minis{display:grid;grid-template-columns:1fr 1fr;gap:6px}.mini{background:#f7f8fa;border-radius:8px;padding:8px}.mini span{font-size:8px;color:#9298a1}.mini b{display:block;font-size:11px;margin-top:2px}.checkrow{display:flex;align-items:center;gap:10px;padding:12px 2px;border-bottom:1px solid #f0f1f4}.checkrow input{width:19px;height:19px}.checkrow .push{margin-left:auto;font-size:9px;color:#999}.record{display:grid;grid-template-columns:1fr 105px;gap:12px;align-items:center;padding:10px 2px;border-bottom:1px solid #f0f1f4}.record b{font-size:11px}.record small{display:block;color:#999;font-size:9px;margin-top:3px}.record input{width:100%;border:1px solid #dfe2e7;border-radius:9px;padding:9px}.skill-info{display:flex;justify-content:space-between;padding:11px;background:#f7f8fa;border-radius:10px;font-size:10px;margin-bottom:10px}.skill-info span{color:#9298a1}.skill{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;padding:13px 2px;border-bottom:1px solid #f0f1f4}.skill b{font-size:11px}.dots{display:flex;gap:4px}.dot{width:22px;height:22px;border-radius:50%;background:#eceef1;display:grid;place-items:center;font-size:9px}.dot.on{background:#20242a;color:#fff}.progress{font-size:9px;color:#858b94}.growth{padding:5px}.growthtop{display:flex;justify-content:space-between;align-items:flex-end}.big{font-size:31px;font-weight:900}.big small{font-size:10px;color:#999}.bars{height:190px;display:flex;align-items:flex-end;gap:7px;border-bottom:1px solid #ddd;padding:10px 5px 25px;margin-top:15px}.bar{flex:1;background:#dfe2e7;border-radius:5px 5px 0 0;min-width:8px;position:relative}.bar.last{background:#20242a}.bar i{position:absolute;top:-15px;left:50%;transform:translateX(-50%);font-style:normal;font-size:8px}.bar span{position:absolute;bottom:-20px;left:50%;transform:translateX(-50%);font-size:8px;color:#999;white-space:nowrap}.reporthero{background:#20242a;color:#fff;border-radius:14px;padding:20px}.reporthero small{opacity:.65;font-size:9px}.reporthero h2{font-size:25px;margin:5px 0}.reportgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}.reportgrid div{background:#f7f8fa;color:#20242a;border-radius:10px;padding:12px}.reportgrid small{color:#999;font-size:8px}.reportgrid b{display:block;margin-top:4px}.settings label{display:flex;flex-direction:column;gap:7px;color:#777;font-size:10px;margin-bottom:14px}.settings hr{border:0;border-top:1px solid #eee;margin:18px 0}.backup{display:flex;gap:8px}.backup button,.filebtn,.settings>button{border:1px solid #e0e3e8;background:#fff;border-radius:9px;padding:10px 12px;font-size:10px;cursor:pointer}.filebtn input{display:none}.notice{margin-top:16px;background:#f7f8fa;padding:12px;border-radius:10px;font-size:9px;line-height:1.6;color:#777e88}nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(100%,1180px);height:66px;background:rgba(255,255,255,.96);border-top:1px solid #e7e9ee;display:flex;justify-content:space-around;align-items:center;z-index:10;backdrop-filter:blur(15px)}nav button{border:0;background:transparent;color:#9ba0a8;font-size:16px;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer}nav button span{font-size:8px}nav button.active{color:#20242a;font-weight:800}dialog{border:0;border-radius:16px;width:min(410px,92vw);padding:20px;box-shadow:0 20px 70px #0003}dialog::backdrop{background:#0004}.modalhead{display:flex;justify-content:space-between;align-items:center}.modalhead h2{font-size:17px}.x{border:0;background:#f0f1f3;border-radius:8px;width:29px;height:29px;font-size:19px}.modalactions{display:flex;justify-content:flex-end;gap:7px;margin-top:15px}.dark,.ghost{border:0;border-radius:9px;padding:10px 13px}.dark{background:#20242a;color:#fff}.ghost{background:#f1f2f4;color:#555}@media(max-width:720px){.top{padding:0 16px}.screen{padding:23px 15px 95px}.grid{grid-template-columns:1fr}.hero,.head{align-items:flex-start}.hero h1,.head h1{font-size:23px}.quick{gap:6px}.stats{gap:7px}.stats article{padding:13px}.stats strong{font-size:19px}.reportgrid{grid-template-columns:1fr 1fr}.reportgrid div:last-child{grid-column:span 2}}
 
 </style>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 </head>
 <body>
 <div class="app">
@@ -197,4 +199,49 @@ if("serviceWorker"in navigator){
 document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible"&&navigator.serviceWorker.controller){navigator.serviceWorker.getRegistration().then(r=>r?.update())}});
 
 </script>
+  <!-- Supabase 로그인 시스템 -->
+<script>
+  const SUPABASE_URL = 'https://wyniunf...⁠';
+  const SUPABASE_ANON_KEY = 'sb_publis...';
+  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  document.addEventListener('DOMContentLoaded', async () => {
+    // 접속 시 로그인 세션 체크
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+      document.getElementById('login-modal').style.display = 'flex';
+    }
+  });
+
+  async function handleLogin() {
+    const email = document.getElementById('login-email').value;
+    const password = document.getElementById('login-password').value;
+    
+    if (!email || !password) {
+      alert('이메일과 비밀번호를 모두 입력해주세요.');
+      return;
+    }
+
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+    
+    if (error) {
+      alert('로그인 실패: ' + error.message);
+    } else {
+      alert('로그인 성공!');
+      document.getElementById('login-modal').style.display = 'none';
+      location.reload();
+    }
+  }
+</script>
+
+<!-- 로그인 모달 화면 -->
+<div id="login-modal" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: none; justify-content: center; align-items: center; z-index: 99999;">
+  <div style="background: white; padding: 25px; border-radius: 15px; width: 85%; max-width: 320px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.3);">
+    <h3 style="margin-top: 0; color: #333;">하랑음악줄넘기 로그인</h3>
+    <input type="email" id="login-email" placeholder="이메일" style="width: 100%; padding: 12px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; font-size: 14px;">
+    <input type="password" id="login-password" placeholder="비밀번호" style="width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; font-size: 14px;">
+    <button onclick="handleLogin()" style="width: 100%; padding: 12px; background: #007bff; color: white; border: none; border-radius: 8px; font-weight: bold; font-size: 15px; cursor: pointer;">로그인하기</button>
+  </div>
+</div>
+
 </body></html>
