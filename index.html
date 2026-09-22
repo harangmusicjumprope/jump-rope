@@ -442,7 +442,67 @@ async function loadStudents() {
     </div>
   `).join('');
 });
-    function showLoginModal() {
+    async function loadAttendanceStudents() {
+    const date = document.getElementById('attendance-date').value;
+    const classPart = document.getElementById('attendance-class-part').value;
+    const list = document.getElementById('attendance-student-list');
+
+    if (!date || !classPart) {
+        alert('출석 날짜와 수업 부를 선택해주세요.');
+        return;
+    }
+
+    const selectedDate = new Date(date + 'T00:00:00');
+    const weekdays = ['일', '월', '화', '수', '목', '금', '토'];
+    const weekday = weekdays[selectedDate.getDay()];
+
+    const { data, error } = await supabaseClient
+        .from('students')
+        .select('*')
+        .eq('class_part', Number(classPart))
+        .order('name', { ascending: true });
+
+    if (error) {
+        console.error('출석 학생 불러오기 오류:', error);
+        list.textContent = '학생을 불러오지 못했습니다.';
+        return;
+    }
+
+    const students = (data || []).filter(student =>
+        (student.class_days || []).includes(weekday)
+    );
+
+    if (students.length === 0) {
+        list.innerHTML = `
+            <div style="padding:15px; text-align:center; color:#888;">
+                해당 날짜와 수업 부에 등록된 학생이 없습니다.
+            </div>
+        `;
+        return;
+    }
+
+    list.innerHTML = students.map(student => `
+        <div style="
+            padding:12px 5px;
+            border-bottom:1px solid #eee;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+        ">
+            <div>
+                <strong>${student.name}</strong>
+                <div style="font-size:0.8rem; color:#888; margin-top:3px;">
+                    ${student.grade || '학년 미지정'}
+                </div>
+            </div>
+
+            <span style="color:#34C759; font-weight:600;">
+                출석
+            </span>
+        </div>
+    `).join('');
+}
+     function showLoginModal() {
       document.getElementById('login-modal').style.display = 'flex';
     }
 
