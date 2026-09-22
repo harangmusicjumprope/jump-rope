@@ -499,6 +499,118 @@ async function showStudentDetail(studentId) {
 function closeStudentDetail() {
     document.getElementById('student-detail-modal').style.display = 'none';
 }
+     let currentStudentId = null;
+
+async function editStudent() {
+    if (!currentStudentId) {
+        alert('학생 정보를 찾을 수 없습니다.');
+        return;
+    }
+
+    const { data: student, error } = await supabaseClient
+        .from('students')
+        .select('*')
+        .eq('id', currentStudentId)
+        .single();
+
+    if (error) {
+        console.error('학생 정보 오류:', error);
+        alert('학생 정보를 불러오지 못했습니다.');
+        return;
+    }
+
+    document.getElementById('student-detail-content').innerHTML = `
+        <div>
+            <div style="margin-bottom:12px;">
+                <label>이름</label>
+                <input id="edit-student-name" value="${student.name || ''}" style="width:100%; padding:10px; box-sizing:border-box;">
+            </div>
+
+            <div style="margin-bottom:12px;">
+                <label>성별</label>
+                <select id="edit-student-gender" style="width:100%; padding:10px;">
+                    <option value="M" ${student.gender === 'M' ? 'selected' : ''}>남자</option>
+                    <option value="F" ${student.gender === 'F' ? 'selected' : ''}>여자</option>
+                </select>
+            </div>
+
+            <div style="margin-bottom:12px;">
+                <label>학년</label>
+                <select id="edit-student-grade" style="width:100%; padding:10px;">
+                    <option value="">학년 선택</option>
+                    <option value="1학년">1학년</option>
+                    <option value="2학년">2학년</option>
+                    <option value="3학년">3학년</option>
+                    <option value="4학년">4학년</option>
+                    <option value="5학년">5학년</option>
+                    <option value="6학년">6학년</option>
+                    <option value="중1">중1</option>
+                    <option value="중2">중2</option>
+                    <option value="중3">중3</option>
+                </select>
+            </div>
+
+            <div style="margin-bottom:12px;">
+                <label>수업 요일</label>
+                <div style="display:flex; flex-wrap:wrap; gap:8px; margin-top:6px;">
+                    ${['월','화','수','목','금','토','일'].map(day => `
+                        <label>
+                            <input type="checkbox" class="edit-class-day" value="${day}"
+                                ${(student.class_days || []).includes(day) ? 'checked' : ''}>
+                            ${day}
+                        </label>
+                    `).join('')}
+                </div>
+            </div>
+
+            <div style="margin-bottom:12px;">
+                <label>수업 부</label>
+                <select id="edit-student-class-part" style="width:100%; padding:10px;">
+                    <option value="">수업 부 선택</option>
+                    ${[1,2,3,4,5,6,7,8].map(part => `
+                        <option value="${part}" ${student.class_part == part ? 'selected' : ''}>
+                            ${part}부
+                        </option>
+                    `).join('')}
+                </select>
+            </div>
+
+            <div style="margin-bottom:12px;">
+                <label>학생 연락처</label>
+                <input id="edit-student-phone" value="${student.phone || ''}" style="width:100%; padding:10px; box-sizing:border-box;">
+            </div>
+
+            <div style="margin-bottom:12px;">
+                <label>보호자 연락처</label>
+                <input id="edit-student-parent-phone" value="${student.parent_phone || ''}" style="width:100%; padding:10px; box-sizing:border-box;">
+            </div>
+
+            <div style="margin-bottom:12px;">
+                <label>상태</label>
+                <select id="edit-student-status" style="width:100%; padding:10px;">
+                    <option value="재원" ${student.status === '재원' ? 'selected' : ''}>재원</option>
+                    <option value="퇴원" ${student.status === '퇴원' ? 'selected' : ''}>퇴원</option>
+                </select>
+            </div>
+
+            <button
+                type="button"
+                onclick="saveStudentEdit()"
+                style="
+                    width:100%;
+                    padding:12px;
+                    border:none;
+                    border-radius:10px;
+                    background:#007AFF;
+                    color:white;
+                    font-size:16px;
+                "
+            >
+                저장하기
+            </button>
+        </div>
+    `;
+}
    </script>
   <!-- 학생 상세정보 팝업 -->
 <div id="student-detail-modal" style="
