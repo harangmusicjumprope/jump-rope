@@ -436,7 +436,7 @@ async function loadStudents() {
 async function showStudentDetail(studentId) {
     currentStudentId = studentId;
 
-    const { data: student, error } = await supabase
+  const { data: student, error } = await supabaseClient 
         .from('students')
         .select('*')
         .eq('id', studentId)
@@ -447,7 +447,7 @@ async function showStudentDetail(studentId) {
         alert('학생 정보를 불러오지 못했습니다.');
         return;
     }
-}
+
 
 
     document.getElementById('student-detail-name').textContent =
