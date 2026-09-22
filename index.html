@@ -433,7 +433,7 @@ async function loadStudents() {
         event.currentTarget.classList.add('active');
       }
     }
-  async function showStudentDetail(studentId) {
+async function showStudentDetail(studentId) {
     const { data: student, error } = await supabaseClient
         .from('students')
         .select('*')
@@ -445,6 +445,60 @@ async function loadStudents() {
         alert('학생 정보를 불러오지 못했습니다.');
         return;
     }
+
+    document.getElementById('student-detail-name').textContent =
+        student.name || '학생 상세정보';
+
+    document.getElementById('student-detail-content').innerHTML = `
+        <div style="line-height:1.8;">
+
+            <div style="
+                background:#f7f7f9;
+                padding:15px;
+                border-radius:12px;
+                margin-bottom:15px;
+            ">
+                <strong style="font-size:1.2rem;">
+                    ${student.name}
+                </strong>
+
+                <div style="color:#666; margin-top:5px;">
+                    ${student.grade || '학년 미지정'}
+                    · ${(student.class_days || []).join('') || '요일 미지정'}
+                    · ${student.class_part ? student.class_part + '부' : '부 미지정'}
+                    · ${student.gender === 'M' ? '남자' : '여자'}
+                </div>
+            </div>
+
+            <div style="padding:5px 0;">
+                <strong>생년월일</strong>
+                <div>${student.brith_date || '미지정'}</div>
+            </div>
+
+            <div style="padding:5px 0;">
+                <strong>학생 연락처</strong>
+                <div>${student.phone || '미지정'}</div>
+            </div>
+
+            <div style="padding:5px 0;">
+                <strong>보호자 연락처</strong>
+                <div>${student.parent_phone || '미지정'}</div>
+            </div>
+
+            <div style="padding:5px 0;">
+                <strong>상태</strong>
+                <div>${student.status || '미지정'}</div>
+            </div>
+
+        </div>
+    `;
+
+    document.getElementById('student-detail-modal').style.display = 'block';
+}
+
+function closeStudentDetail() {
+    document.getElementById('student-detail-modal').style.display = 'none';
+}
 
     alert(
         `학생 상세정보\n\n` +
