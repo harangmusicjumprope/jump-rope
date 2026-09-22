@@ -231,11 +231,20 @@ document.getElementById('student-form')?.addEventListener('submit', async (e) =>
         alert('학생 이름을 입력해주세요.');
         return;
     }
+const brithDate = document.getElementById('student-brith-date').value || null;
+const phone = document.getElementById('student-phone').value.trim() || null;
+const parentPhone = document.getElementById('student-parent-phone').value.trim() || null;
+const status = document.getElementById('student-status').value || '재원';
+
 const { error } = await supabaseClient
     .from('students')
     .insert({
         name: name,
-        gender: gender
+        gender: gender,
+        brith_date: brithDate,
+        phone: phone,
+        parent_phone: parentPhone,
+        status: status
     });
 
 if (error) {
