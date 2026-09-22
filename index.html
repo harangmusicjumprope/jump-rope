@@ -620,7 +620,6 @@ async function editStudent() {
         alert('학생 정보를 찾을 수 없습니다.');
         return;
     }
-
     const name = document.getElementById('edit-student-name').value.trim();
     const gender = document.getElementById('edit-student-gender').value;
     const grade = document.getElementById('edit-student-grade').value || null;
@@ -628,7 +627,7 @@ async function editStudent() {
     const classDays = Array.from(
         document.querySelectorAll('.edit-class-day:checked')
     ).map(input => input.value);
-
+새
     const classPart =
         document.getElementById('edit-student-class-part').value || null;
 
@@ -748,6 +747,22 @@ async function editStudent() {
     >
         ✏️ 학생 정보 수정
     </button>
+  <button
+    type="button"
+    onclick="deleteStudent()"
+    style="
+        flex:1;
+        padding:12px;
+        border:none;
+        border-radius:10px;
+        background:#FF3B30;
+        color:white;
+        font-size:16px;
+        cursor:pointer;
+    "
+>
+    🗑️ 학생 삭제
+</button>
 </div>
 
 </div>
