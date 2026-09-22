@@ -563,7 +563,7 @@ list.innerHTML = students.map(student => `
         return {
             student_id: studentId,
             date: date,
-            status: input.value,
+            status: input.value === '출석' ? 'present' : 'absent',
             checked_by: userId,
             class_part: Number(classPart)
         };
