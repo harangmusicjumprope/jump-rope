@@ -529,6 +529,70 @@ list.innerHTML = students.map(student => `
     </div>
 `).join('');
     }
+     async function saveAttendance() {
+    const date = document.getElementById('attendance-date').value;
+    const classPart = document.getElementById('attendance-class-part').value;
+
+    if (!date || !classPart) {
+        alert('출석 날짜와 수업 부를 선택해주세요.');
+        return;
+    }
+
+    const checkedInputs = document.querySelectorAll(
+        'input[type="radio"][name^="attendance-status-"]:checked'
+    );
+
+    if (checkedInputs.length === 0) {
+        alert('학생을 먼저 불러와주세요.');
+        return;
+    }
+
+    const { data: sessionData, error: sessionError } =
+        await supabaseClient.auth.getSession();
+
+    if (sessionError || !sessionData.session) {
+        alert('로그인이 필요합니다.');
+        return;
+    }
+
+    const userId = sessionData.session.user.id;
+
+    const attendanceData = Array.from(checkedInputs).map(input => {
+        const studentId = input.name.replace('attendance-status-', '');
+
+        return {
+            student_id: studentId,
+            date: date,
+            status: input.value,
+            checked_by: userId,
+            class_part: Number(classPart)
+        };
+    });
+
+    const { error: deleteError } = await supabaseClient
+        .from('attendance')
+        .delete()
+        .eq('date', date)
+        .eq('class_part', Number(classPart));
+
+    if (deleteError) {
+        console.error('기존 출석 삭제 오류:', deleteError);
+        alert('기존 출석 기록을 정리하지 못했습니다.\n' + deleteError.message);
+        return;
+    }
+
+    const { error: insertError } = await supabaseClient
+        .from('attendance')
+        .insert(attendanceData);
+
+    if (insertError) {
+        console.error('출석 저장 오류:', insertError);
+        alert('출석 저장에 실패했습니다.\n' + insertError.message);
+        return;
+    }
+
+    alert('출석이 저장되었습니다!');
+}
      function showLoginModal() {
       document.getElementById('login-modal').style.display = 'flex';
     }
