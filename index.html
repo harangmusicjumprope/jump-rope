@@ -615,6 +615,63 @@ async function editStudent() {
         </div>
     `;
 }
+     async function saveStudentEdit() {
+    if (!currentStudentId) {
+        alert('학생 정보를 찾을 수 없습니다.');
+        return;
+    }
+
+    const name = document.getElementById('edit-student-name').value.trim();
+    const gender = document.getElementById('edit-student-gender').value;
+    const grade = document.getElementById('edit-student-grade').value || null;
+
+    const classDays = Array.from(
+        document.querySelectorAll('.edit-class-day:checked')
+    ).map(input => input.value);
+
+    const classPart =
+        document.getElementById('edit-student-class-part').value || null;
+
+    const phone =
+        document.getElementById('edit-student-phone').value.trim() || null;
+
+    const parentPhone =
+        document.getElementById('edit-student-parent-phone').value.trim() || null;
+
+    const status =
+        document.getElementById('edit-student-status').value || '재원';
+
+    if (!name) {
+        alert('학생 이름을 입력해주세요.');
+        return;
+    }
+
+    const { error } = await supabaseClient
+        .from('students')
+        .update({
+            name: name,
+            gender: gender,
+            grade: grade,
+            class_days: classDays,
+            class_part: classPart ? Number(classPart) : null,
+            phone: phone,
+            parent_phone: parentPhone,
+            status: status
+        })
+        .eq('id', currentStudentId);
+
+    if (error) {
+        console.error('학생 정보 수정 오류:', error);
+        alert('학생 정보 수정에 실패했습니다.\n' + error.message);
+        return;
+    }
+
+    alert('학생 정보가 수정되었습니다!');
+
+    document.getElementById('student-detail-modal').style.display = 'none';
+
+    await loadStudents();
+}
    </script>
   <!-- 학생 상세정보 팝업 -->
 <div id="student-detail-modal" style="
