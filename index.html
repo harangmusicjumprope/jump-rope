@@ -352,24 +352,25 @@ async function loadStudents() {
     }
 
     list.innerHTML = data.map(student => `
-        <div style="
+    <div
+        onclick="showStudentDetail('${student.id}')"
+        style="
             padding:12px 5px;
             border-bottom:1px solid #eee;
-            display:flex;
-            justify-content:space-between;
-            align-items:center;
-        ">
-          <div>
-    <strong>${student.name}</strong>
-    <div style="color:#888; font-size:0.85rem; margin-top:4px;">
-        ${student.grade || '학년 미지정'}
-        · ${(student.class_days || []).join('')}
-        · ${student.class_part ? student.class_part + '부' : '부 미지정'}
-        · ${student.gender === 'M' ? '남자' : '여자'}
-    </div>
-</div>
+            cursor:pointer;
+        "
+    >
+        <div>
+            <strong>${student.name}</strong>
+            <div style="color:#888; font-size:0.85rem; margin-top:4px;">
+                ${student.grade || '학년 미지정'}
+                · ${(student.class_days || []).join('')}
+                · ${student.class_part ? student.class_part + '부' : '부 미지정'}
+                · ${student.gender === 'M' ? '남자' : '여자'}
+            </div>
         </div>
-    `).join('');
+    </div>
+`).join('');
 }
    document.getElementById('student-search')?.addEventListener('input', async (e) => {
   const keyword = e.target.value.trim().toLowerCase();
@@ -432,6 +433,32 @@ async function loadStudents() {
         event.currentTarget.classList.add('active');
       }
     }
-  </script>
+  async function showStudentDetail(studentId) {
+    const { data: student, error } = await supabaseClient
+        .from('students')
+        .select('*')
+        .eq('id', studentId)
+        .single();
+
+    if (error) {
+        console.error('학생 상세정보 오류:', error);
+        alert('학생 정보를 불러오지 못했습니다.');
+        return;
+    }
+
+    alert(
+        `학생 상세정보\n\n` +
+        `이름: ${student.name}\n` +
+        `성별: ${student.gender === 'M' ? '남자' : '여자'}\n` +
+        `학년: ${student.grade || '미지정'}\n` +
+        `수업요일: ${(student.class_days || []).join(' · ') || '미지정'}\n` +
+        `수업: ${student.class_part ? student.class_part + '부' : '미지정'}\n` +
+        `생년월일: ${student.brith_date || '미지정'}\n` +
+        `학생 연락처: ${student.phone || '미지정'}\n` +
+        `보호자 연락처: ${student.parent_phone || '미지정'}\n` +
+        `상태: ${student.status || '미지정'}`
+    );
+}
+   </script>
 </body>
 </html>
