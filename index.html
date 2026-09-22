@@ -434,7 +434,12 @@ async function loadStudents() {
       }
     }
 async function showStudentDetail(studentId) {
-    const { data: student, error } = await supabaseClient
+    async function showStudentDetail(studentId) {
+    currentStudentId = studentId; // 👈 이 코드를 추가해 주세요!
+
+    const { data: student, error } = await supabase
+
+  const { data: student, error } = await supabaseClient
         .from('students')
         .select('*')
         .eq('id', studentId)
