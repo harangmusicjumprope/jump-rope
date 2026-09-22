@@ -180,12 +180,43 @@
     </div>
 
     <!-- 출석 관리 탭 -->
-    <div id="tab-attendance" class="tab-content">
-      <div class="card">
-        <h3>출석 관리</h3>
-        <p>오늘의 출석 현황을 관리합니다.</p>
-      </div>
+ <div id="tab-attendance" class="tab-content">
+  <div class="card">
+    <h3>출석 관리</h3>
+
+    <div class="form-group">
+      <label>출석 날짜</label>
+      <input type="date" id="attendance-date">
     </div>
+
+    <div class="form-group">
+      <label>수업 부</label>
+      <select id="attendance-class-part">
+        <option value="">수업 부 선택</option>
+        <option value="1">1부</option>
+        <option value="2">2부</option>
+        <option value="3">3부</option>
+        <option value="4">4부</option>
+        <option value="5">5부</option>
+        <option value="6">6부</option>
+        <option value="7">7부</option>
+        <option value="8">8부</option>
+      </select>
+    </div>
+
+    <button
+      type="button"
+      class="btn"
+      onclick="loadAttendanceStudents()"
+    >
+      학생 불러오기
+    </button>
+
+    <div id="attendance-student-list" style="margin-top:15px;">
+      날짜와 수업 부를 선택해주세요.
+    </div>
+  </div>
+</div>
 
     <!-- 줄넘기 기록 탭 -->
     <div id="tab-records" class="tab-content">
