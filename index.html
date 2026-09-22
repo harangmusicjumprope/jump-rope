@@ -615,7 +615,7 @@ async function editStudent() {
         </div>
     `;
 }
-     async function saveStudentEdit() {
+async function saveStudentEdit() {
     if (!currentStudentId) {
         alert('학생 정보를 찾을 수 없습니다.');
         return;
@@ -627,7 +627,6 @@ async function editStudent() {
     const classDays = Array.from(
         document.querySelectorAll('.edit-class-day:checked')
     ).map(input => input.value);
-새
     const classPart =
         document.getElementById('edit-student-class-part').value || null;
 
@@ -671,6 +670,7 @@ async function editStudent() {
 
     await loadStudents();
 }
+     
    </script>
   <!-- 학생 상세정보 팝업 -->
 <div id="student-detail-modal" style="
