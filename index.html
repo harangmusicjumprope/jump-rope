@@ -480,11 +480,12 @@ async function loadStudents() {
         `;
         return;
     }
-
-    list.innerHTML = students.map(student => `
+list.innerHTML = students.map(student => `
+    <div style="
+        padding:12px 5px;
+        border-bottom:1px solid #eee;
+    ">
         <div style="
-            padding:12px 5px;
-            border-bottom:1px solid #eee;
             display:flex;
             justify-content:space-between;
             align-items:center;
@@ -496,12 +497,30 @@ async function loadStudents() {
                 </div>
             </div>
 
-            <span style="color:#34C759; font-weight:600;">
-                출석
-            </span>
+            <div style="display:flex; gap:10px; align-items:center;">
+                <label style="color:#34C759; font-weight:600;">
+                    <input
+                        type="radio"
+                        name="attendance-status-${student.id}"
+                        value="출석"
+                        checked
+                    >
+                    출석
+                </label>
+
+                <label style="color:#FF3B30; font-weight:600;">
+                    <input
+                        type="radio"
+                        name="attendance-status-${student.id}"
+                        value="결석"
+                    >
+                    결석
+                </label>
+            </div>
         </div>
-    `).join('');
-}
+    </div>
+`).join('');
+    }
      function showLoginModal() {
       document.getElementById('login-modal').style.display = 'flex';
     }
