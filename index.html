@@ -359,10 +359,15 @@ async function loadStudents() {
             justify-content:space-between;
             align-items:center;
         ">
-            <strong>${student.name}</strong>
-            <span style="color:#888;">
-                ${student.gender === 'M' ? '남자' : '여자'}
-            </span>
+          <div>
+    <strong>${student.name}</strong>
+    <div style="color:#888; font-size:0.85rem; margin-top:4px;">
+        ${student.grade || '학년 미지정'}
+        · ${(student.class_days || []).join('')}
+        · ${student.class_part ? student.class_part + '부' : '부 미지정'}
+        · ${student.gender === 'M' ? '남자' : '여자'}
+    </div>
+</div>
         </div>
     `).join('');
 }
