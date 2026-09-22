@@ -99,8 +99,48 @@
     <option value="중2">중2</option>
     <option value="중3">중3</option>
   </select>
-</div>
+ <div class="form-group">
+  <label>수업 요일</label>
 
+  <div style="display:flex; flex-wrap:wrap; gap:8px;">
+    <label>
+      <input type="checkbox" name="class-day" value="월"> 월
+    </label>
+    <label>
+      <input type="checkbox" name="class-day" value="화"> 화
+    </label>
+    <label>
+      <input type="checkbox" name="class-day" value="수"> 수
+    </label>
+    <label>
+      <input type="checkbox" name="class-day" value="목"> 목
+    </label>
+    <label>
+      <input type="checkbox" name="class-day" value="금"> 금
+    </label>
+    <label>
+      <input type="checkbox" name="class-day" value="토"> 토
+    </label>
+    <label>
+      <input type="checkbox" name="class-day" value="일"> 일
+    </label>
+  </div>
+</div>           
+</div>
+<div class="form-group">
+  <label>수업 부</label>
+  <select id="student-class-part">
+    <option value="">수업 부 선택</option>
+    <option value="1">1부</option>
+    <option value="2">2부</option>
+    <option value="3">3부</option>
+    <option value="4">4부</option>
+    <option value="5">5부</option>
+    <option value="6">6부</option>
+    <option value="7">7부</option>
+    <option value="8">8부</option>
+  </select>
+</div>
   <div class="form-group">
     <label>생년월일</label>
     <input type="date" id="student-brith-date">
@@ -249,7 +289,12 @@ document.getElementById('student-form')?.addEventListener('submit', async (e) =>
     const name = document.getElementById('student-name').value.trim();
     const gender = document.getElementById('student-gender').value;
 const grade = document.getElementById('student-grade').value || null;
-    if (!name) {
+    const classDays = Array.from(
+    document.querySelectorAll('input[name="class-day"]:checked')
+).map(input => input.value);
+
+const classPart = document.getElementById('student-class-part').value || null;
+  if (!name) {
         alert('학생 이름을 입력해주세요.');
         return;
     }
@@ -260,15 +305,17 @@ const status = document.getElementById('student-status').value || '재원';
 
 const { error } = await supabaseClient
     .from('students')
-    .insert({
-        name: name,
-        gender: gender,
-      grade: grade,
-        brith_date: brithDate,
-        phone: phone,
-        parent_phone: parentPhone,
-        status: status
-    });
+  .insert({
+    name: name,
+    gender: gender,
+    grade: grade,
+    class_days: classDays,
+    class_part: classPart ? Number(classPart) : null,
+    brith_date: brithDate,
+    phone: phone,
+    parent_phone: parentPhone,
+    status: status
+});
 
 if (error) {
     console.error('학생 등록 오류:', error);
