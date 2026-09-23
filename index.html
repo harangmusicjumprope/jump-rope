@@ -686,6 +686,90 @@ if (students.length === 0) {
         </div>
     `;
 }
+    function addExtraAttendanceStudent(studentId, studentName, studentGrade) {
+    const checkbox = document.querySelector(
+        `input[type="checkbox"][value="${studentId}"]`
+    );
+
+    const list = document.getElementById('attendance-student-list');
+    const existingRow = document.getElementById(
+        `extra-attendance-${studentId}`
+    );
+
+    if (!checkbox) {
+        return;
+    }
+
+    if (!checkbox.checked) {
+        if (existingRow) {
+            existingRow.remove();
+        }
+        return;
+    }
+
+    if (existingRow) {
+        return;
+    }
+
+    list.insertAdjacentHTML('beforeend', `
+        <div
+            id="extra-attendance-${studentId}"
+            style="
+                padding:12px 5px;
+                border-bottom:1px solid #eee;
+                background:#fff8e1;
+            "
+        >
+            <div style="
+                display:flex;
+                justify-content:space-between;
+                align-items:center;
+            ">
+                <div>
+                    <strong>${studentName}</strong>
+                    <span style="
+                        font-size:0.8rem;
+                        color:#ff9500;
+                        margin-left:6px;
+                    ">
+                        보강
+                    </span>
+                    <div style="
+                        font-size:0.8rem;
+                        color:#888;
+                        margin-top:3px;
+                    ">
+                        ${studentGrade || '학년 미지정'}
+                    </div>
+                </div>
+
+                <div style="
+                    display:flex;
+                    gap:10px;
+                    align-items:center;
+                ">
+                    <label style="color:#34C759; font-weight:600;">
+                        <input
+                            type="radio"
+                            name="attendance-status-${studentId}"
+                            value="출석"
+                        >
+                        출석
+                    </label>
+
+                    <label style="color:#FF3B30; font-weight:600;">
+                        <input
+                            type="radio"
+                            name="attendance-status-${studentId}"
+                            value="결석"
+                        >
+                        결석
+                    </label>
+                </div>
+            </div>
+        </div>
+    `);
+} 
   function showLoginModal() {
      document.getElementById('login-modal').style.display = 'flex';
     }
