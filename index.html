@@ -218,6 +218,20 @@
     <button
   type="button"
   class="btn"
+  style="margin-top:10px;"
+  onclick="showExtraAttendanceStudents()"
+>
+  + 보강/추가 학생
+</button>
+
+<div
+  id="extra-attendance-students"
+  style="margin-top:10px; display:none;"
+>
+</div>
+    <button
+  type="button"
+  class="btn"
   style="margin-top:15px;"
   onclick="saveAttendance()"
 >
@@ -616,7 +630,62 @@ if (students.length === 0) {
 
     alert('출석이 저장되었습니다!');
 }
-     function showLoginModal() {
+       async function showExtraAttendanceStudents() {
+    const box = document.getElementById('extra-attendance-students');
+
+    if (box.style.display === 'none') {
+        box.style.display = 'block';
+    } else {
+        box.style.display = 'none';
+        return;
+    }
+
+    const { data, error } = await supabaseClient
+        .from('students')
+        .select('id, name, grade')
+        .order('name', { ascending: true });
+
+    if (error) {
+        console.error('추가 학생 불러오기 오류:', error);
+        box.innerHTML = '학생 목록을 불러오지 못했습니다.';
+        return;
+    }
+
+    box.innerHTML = `
+        <div style="
+            border:1px solid #ddd;
+            border-radius:10px;
+            padding:10px;
+            background:#fafafa;
+        ">
+            <div style="font-weight:600; margin-bottom:10px;">
+                보강/추가할 학생을 선택하세요
+            </div>
+
+            ${data.map(student => `
+                <label style="
+                    display:flex;
+                    align-items:center;
+                    gap:10px;
+                    padding:10px 5px;
+                    border-bottom:1px solid #eee;
+                ">
+                    <input
+                        type="checkbox"
+                        value="${student.id}"
+                        onchange="addExtraAttendanceStudent('${student.id}', '${student.name}', '${student.grade || ''}')"
+                    >
+                    <span>
+                        <strong>${student.name}</strong>
+                        <span style="font-size:0.8rem; color:#888;">
+                            ${student.grade || '학년 미지정'}
+                        </span>
+                    </span>
+                </label>
+            `).join('')}
+        </div>
+    `;
+}
       document.getElementById('login-modal').style.display = 'flex';
     }
 
