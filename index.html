@@ -498,47 +498,59 @@ if (students.length === 0) {
     `;
     return;
 }
-    
-list.innerHTML = students.map(student => `
-    <div style="
-        padding:12px 5px;
-        border-bottom:1px solid #eee;
-    ">
+    list.innerHTML = students.map(student => {
+    const saved = (savedAttendance || []).find(
+        item => item.student_id === student.id
+    );
+
+    const currentStatus = saved ? saved.status : 'present';
+
+    return `
         <div style="
-            display:flex;
-            justify-content:space-between;
-            align-items:center;
+            padding:12px 5px;
+            border-bottom:1px solid #eee;
         ">
-            <div>
-                <strong>${student.name}</strong>
-                <div style="font-size:0.8rem; color:#888; margin-top:3px;">
-                    ${student.grade || '학년 미지정'}
+            <div style="
+                display:flex;
+                justify-content:space-between;
+                align-items:center;
+            ">
+                <div>
+                    <strong>${student.name}</strong>
+                    <div style="font-size:0.8rem; color:#888; margin-top:3px;">
+                        ${student.grade || '학년 미지정'}
+                    </div>
+                </div>
+
+                <div style="
+                    display:flex;
+                    gap:10px;
+                    align-items:center;
+                ">
+                    <label style="color:#34C759; font-weight:600;">
+                        <input
+                            type="radio"
+                            name="attendance-status-${student.id}"
+                            value="출석"
+                            ${currentStatus === 'present' ? 'checked' : ''}
+                        >
+                        출석
+                    </label>
+
+                    <label style="color:#FF3B30; font-weight:600;">
+                        <input
+                            type="radio"
+                            name="attendance-status-${student.id}"
+                            value="결석"
+                            ${currentStatus === 'absent' ? 'checked' : ''}
+                        >
+                        결석
+                    </label>
                 </div>
             </div>
-
-            <div style="display:flex; gap:10px; align-items:center;">
-                <label style="color:#34C759; font-weight:600;">
-                    <input
-                        type="radio"
-                        name="attendance-status-${student.id}"
-                        value="출석"
-                        checked
-                    >
-                    출석
-                </label>
-
-                <label style="color:#FF3B30; font-weight:600;">
-                    <input
-                        type="radio"
-                        name="attendance-status-${student.id}"
-                        value="결석"
-                    >
-                    결석
-                </label>
-            </div>
         </div>
-    </div>
-`).join('');
+    `;
+}).join('');
     }
      async function saveAttendance() {
     const date = document.getElementById('attendance-date').value;
