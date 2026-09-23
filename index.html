@@ -246,6 +246,41 @@
         <h3>기록 측정</h3>
         <p>줄넘기 기록 측정 화면입니다.</p>
       </div>
+      <div class="card" style="margin-top:15px;">
+    <h3>📋 월간 출석부</h3>
+
+    <div class="form-group">
+        <label>출석 월</label>
+        <input type="month" id="monthly-attendance-month">
+    </div>
+
+    <div class="form-group">
+        <label>수업 부</label>
+        <select id="monthly-attendance-class-part">
+            <option value="">수업 부 선택</option>
+            <option value="1">1부</option>
+            <option value="2">2부</option>
+            <option value="3">3부</option>
+            <option value="4">4부</option>
+            <option value="5">5부</option>
+            <option value="6">6부</option>
+            <option value="7">7부</option>
+            <option value="8">8부</option>
+        </select>
+    </div>
+
+    <button
+        type="button"
+        class="btn"
+        onclick="loadMonthlyAttendance()"
+    >
+        월간 출석부 불러오기
+    </button>
+
+    <div id="monthly-attendance-list" style="margin-top:15px;">
+        월과 수업 부를 선택해주세요.
+    </div>
+</div>
     </div>
 
     <!-- 성장 리포트 탭 -->
@@ -788,6 +823,190 @@ if (students.length === 0) {
         </div>
     `);
 } 
+   async function loadMonthlyAttendance() {
+    const month = document.getElementById('monthly-attendance-month').value;
+    const classPart = document.getElementById('monthly-attendance-class-part').value;
+    const list = document.getElementById('monthly-attendance-list');
+
+    if (!month || !classPart) {
+        alert('출석 월과 수업 부를 선택해주세요.');
+        return;
+    }
+
+    const { data: students, error: studentError } = await supabaseClient
+        .from('students')
+        .select('*')
+        .eq('class_part', Number(classPart))
+        .order('name', { ascending: true });
+
+    if (studentError) {
+        console.error('월간 학생 불러오기 오류:', studentError);
+        list.innerHTML = '학생을 불러오지 못했습니다.';
+        return;
+    }
+
+    if (!students || students.length === 0) {
+        list.innerHTML = `
+            <div style="padding:15px; text-align:center; color:#888;">
+                해당 수업 부에 등록된 학생이 없습니다.
+            </div>
+        `;
+        return;
+    }
+
+    const startDate = `${month}-01`;
+
+    const [year, monthNumber] = month.split('-').map(Number);
+    const lastDay = new Date(year, monthNumber, 0).getDate();
+
+    const { data: attendanceData, error: attendanceError } =
+        await supabaseClient
+        .from('attendance')
+        .select('student_id, date, status')
+        .gte('date', startDate)
+        .lte('date', `${month}-${String(lastDay).padStart(2, '0')}`)
+        .eq('class_part', Number(classPart));
+
+    if (attendanceError) {
+        console.error('월간 출석 불러오기 오류:', attendanceError);
+        list.innerHTML = '출석 기록을 불러오지 못했습니다.';
+        return;
+    }
+    const savedStudentIds = (attendanceData || []).map(
+        item => item.student_id
+    );
+
+    if (savedStudentIds.length > 0) {
+        const { data: savedStudents, error: savedStudentsError } =
+            await supabaseClient
+            .from('students')
+            .select('*')
+            .in('id', savedStudentIds);
+
+        if (!savedStudentsError && savedStudents) {
+            savedStudents.forEach(student => {
+                if (!students.some(item => item.id === student.id)) {
+                    students.push(student);
+                }
+            });
+        }
+    }
+    const attendanceMap = {};
+
+    (attendanceData || []).forEach(item => {
+        if (!attendanceMap[item.student_id]) {
+            attendanceMap[item.student_id] = {};
+        }
+
+        attendanceMap[item.student_id][item.date] = item.status;
+    });
+
+    let html = `
+        <div style="overflow-x:auto;">
+            <table style="
+                border-collapse:collapse;
+                width:max-content;
+                min-width:100%;
+                font-size:12px;
+            ">
+                <thead>
+                    <tr>
+                        <th style="
+                            border:1px solid #ddd;
+                            padding:8px;
+                            background:#f5f5f5;
+                            position:sticky;
+                            left:0;
+                            z-index:2;
+                        ">
+                            학생
+                        </th>
+    `;
+
+    for (let day = 1; day <= lastDay; day++) {
+        html += `
+            <th style="
+                border:1px solid #ddd;
+                padding:6px;
+                background:#f5f5f5;
+                min-width:32px;
+            ">
+                ${day}
+            </th>
+        `;
+    }
+
+    html += `
+                    </tr>
+                </thead>
+                <tbody>
+    `;
+
+    students.forEach(student => {
+        html += `
+            <tr>
+                <td style="
+                    border:1px solid #ddd;
+                    padding:8px;
+                    background:#fff;
+                    position:sticky;
+                    left:0;
+                    z-index:1;
+                    font-weight:600;
+                    white-space:nowrap;
+                ">
+                    ${student.name}
+                </td>
+        `;
+
+        for (let day = 1; day <= lastDay; day++) {
+            const date = `${month}-${String(day).padStart(2, '0')}`;
+            const status =
+                attendanceMap[student.id]?.[date] || '';
+
+            let mark = '';
+            let background = '#fff';
+
+            if (status === 'present') {
+                mark = '○';
+                background = '#E8F8EE';
+            } else if (status === 'absent') {
+                mark = '×';
+                background = '#FFF0F0';
+            }
+
+            html += `
+                <td style="
+                    border:1px solid #ddd;
+                    padding:6px;
+                    text-align:center;
+                    background:${background};
+                    font-weight:700;
+                ">
+                    ${mark}
+                </td>
+            `;
+        }
+
+        html += `</tr>`;
+    });
+
+    html += `
+                </tbody>
+            </table>
+        </div>
+
+        <div style="
+            margin-top:10px;
+            font-size:13px;
+            color:#666;
+        ">
+            ○ 출석 &nbsp;&nbsp; × 결석 &nbsp;&nbsp; 빈칸 = 미기록
+        </div>
+    `;
+
+    list.innerHTML = html;
+}  
   function showLoginModal() {
      document.getElementById('login-modal').style.display = 'flex';
     }
