@@ -475,19 +475,30 @@ async function loadStudents() {
         list.textContent = '학생을 불러오지 못했습니다.';
         return;
     }
+const students = (data || []).filter(student =>
+    (student.class_days || []).includes(weekday)
+);
 
-    const students = (data || []).filter(student =>
-        (student.class_days || []).includes(weekday)
-    );
+const { data: savedAttendance, error: attendanceError } =
+    await supabaseClient
+        .from('attendance')
+        .select('student_id, status')
+        .eq('date', date)
+        .eq('class_part', Number(classPart));
 
-    if (students.length === 0) {
-        list.innerHTML = `
-            <div style="padding:15px; text-align:center; color:#888;">
-                해당 날짜와 수업 부에 등록된 학생이 없습니다.
-            </div>
-        `;
-        return;
-    }
+if (attendanceError) {
+    console.error('기존 출석 불러오기 오류:', attendanceError);
+}
+
+if (students.length === 0) {
+    list.innerHTML = `
+        <div style="padding:15px; text-align:center; color:#888;">
+            해당 날짜와 수업 부에 등록된 학생이 없습니다.
+        </div>
+    `;
+    return;
+}
+    
 list.innerHTML = students.map(student => `
     <div style="
         padding:12px 5px;
