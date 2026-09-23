@@ -489,7 +489,7 @@ async function loadStudents() {
         list.textContent = '학생을 불러오지 못했습니다.';
         return;
     }
-const students = (data || []).filter(student =>
+let students = (data || []).filter(student =>
     (student.class_days || []).includes(weekday)
 );
 
@@ -503,7 +503,25 @@ const { data: savedAttendance, error: attendanceError } =
 if (attendanceError) {
     console.error('기존 출석 불러오기 오류:', attendanceError);
 }
+    const savedStudentIds = (savedAttendance || []).map(
+        item => item.student_id
+    );
 
+    if (savedStudentIds.length > 0) {
+        const { data: savedStudents, error: savedStudentsError } =
+            await supabaseClient
+            .from('students')
+            .select('*')
+            .in('id', savedStudentIds);
+
+        if (!savedStudentsError && savedStudents) {
+            savedStudents.forEach(student => {
+                if (!students.some(item => item.id === student.id)) {
+                    students.push(student);
+                }
+            });
+        }
+    }
 if (students.length === 0) {
     list.innerHTML = `
         <div style="padding:15px; text-align:center; color:#888;">
